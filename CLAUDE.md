@@ -39,13 +39,15 @@ kommit-backend/
 │   │   ├── dbHealthController.ts
 │   │   ├── healthController.ts
 │   │   └── rootController.ts
-│   └── services/
-│       ├── dbHealth/
-│       │   └── dbHealthService.ts
-│       ├── health/
-│       │   └── healthService.ts
-│       └── root/
-│           └── rootService.ts
+│   ├── services/
+│   │   ├── dbHealth/
+│   │   │   └── dbHealthService.ts
+│   │   ├── health/
+│   │   │   └── healthService.ts
+│   │   └── root/
+│   │       └── rootService.ts
+│   └── types/
+│       └── apiContract.ts # contrat de l'API, copie du front
 ├── .env.example           # modèle des variables d'environnement
 ├── .gitignore
 ├── CLAUDE.md              # ce fichier
