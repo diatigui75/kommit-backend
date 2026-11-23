@@ -15,8 +15,25 @@ kommit-backend/
 │   └── settings.json
 ├── docs/
 │   └── TECH.md            # stack technique
+├── src/
+│   ├── index.ts           # démarrage du serveur
+│   ├── app.ts             # assemblage de l'app Express
+│   ├── config/
+│   │   └── appConfig.ts   # port, nom et version du service
+│   ├── middlewares/
+│   │   ├── errorHandler.ts
+│   │   └── notFound.ts
+│   ├── routes/
+│   │   ├── index.ts       # router principal
+│   │   └── rootRoutes.ts
+│   ├── controllers/
+│   │   └── rootController.ts
+│   └── services/
+│       └── root/
+│           └── rootService.ts
 ├── .gitignore
 ├── CLAUDE.md              # ce fichier
 ├── package.json
-└── pnpm-lock.yaml
+├── pnpm-lock.yaml
+└── tsconfig.json
 ```
