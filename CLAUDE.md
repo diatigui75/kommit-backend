@@ -15,11 +15,13 @@ kommit-backend/
 │   └── settings.json
 ├── docs/
 │   └── TECH.md            # stack technique
+├── prisma/
+│   └── schema.prisma      # schéma Prisma, sans modèle pour le moment
 ├── src/
 │   ├── index.ts           # démarrage du serveur
 │   ├── app.ts             # assemblage de l'app Express
 │   ├── config/
-│   │   └── appConfig.ts   # port, nom et version du service
+│   │   └── appConfig.ts   # port, nom, version et URL de la base
 │   ├── middlewares/
 │   │   ├── errorHandler.ts
 │   │   └── notFound.ts
@@ -27,6 +29,9 @@ kommit-backend/
 │   │   ├── index.ts       # router principal
 │   │   ├── healthRoutes.ts
 │   │   └── rootRoutes.ts
+│   ├── repositories/
+│   │   ├── generated/     # client Prisma généré (ignoré par git)
+│   │   └── prismaClient.ts # instance unique du client Prisma
 │   ├── controllers/
 │   │   ├── healthController.ts
 │   │   └── rootController.ts
@@ -35,9 +40,12 @@ kommit-backend/
 │       │   └── healthService.ts
 │       └── root/
 │           └── rootService.ts
+├── .env.example           # modèle des variables d'environnement
 ├── .gitignore
 ├── CLAUDE.md              # ce fichier
 ├── package.json
 ├── pnpm-lock.yaml
+├── pnpm-workspace.yaml    # scripts d'installation autorisés
+├── prisma.config.ts       # config de la CLI Prisma
 └── tsconfig.json
 ```

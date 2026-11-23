@@ -1,0 +1,12 @@
+// Aucun modèle pour le moment : la modélisation arrivera avec la 1re feature.
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/repositories/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
