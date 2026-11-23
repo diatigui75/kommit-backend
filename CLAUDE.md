@@ -25,10 +25,14 @@ kommit-backend/
 │   │   └── notFound.ts
 │   ├── routes/
 │   │   ├── index.ts       # router principal
+│   │   ├── healthRoutes.ts
 │   │   └── rootRoutes.ts
 │   ├── controllers/
+│   │   ├── healthController.ts
 │   │   └── rootController.ts
 │   └── services/
+│       ├── health/
+│       │   └── healthService.ts
 │       └── root/
 │           └── rootService.ts
 ├── .gitignore

@@ -18,6 +18,11 @@ const endpoints: Endpoint[] = [
     path: '/',
     description: "Documentation d'entrée de l'API : nom du service, version et endpoints exposés.",
   },
+  {
+    method: 'GET',
+    path: '/health',
+    description: "État du process : statut, uptime en secondes et horodatage.",
+  },
 ]
 
 export const getServiceInfo = (): ServiceInfo => ({
