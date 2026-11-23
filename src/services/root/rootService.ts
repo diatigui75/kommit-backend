@@ -23,6 +23,11 @@ const endpoints: Endpoint[] = [
     path: '/health',
     description: "État du process : statut, uptime en secondes et horodatage.",
   },
+  {
+    method: 'GET',
+    path: '/db-health',
+    description: 'État de la base de données : statut et latence en ms, 503 si elle est injoignable.',
+  },
 ]
 
 export const getServiceInfo = (): ServiceInfo => ({
