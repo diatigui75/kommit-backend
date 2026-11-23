@@ -23,6 +23,7 @@ kommit-backend/
 │   ├── config/
 │   │   └── appConfig.ts   # port, nom, version et URL de la base
 │   ├── middlewares/
+│   │   ├── corsMiddleware.ts # whitelist des origins CORS
 │   │   ├── errorHandler.ts
 │   │   └── notFound.ts
 │   ├── routes/
