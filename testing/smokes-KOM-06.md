@@ -71,7 +71,7 @@ Lecture de la base : les vérifications « en base » utilisent `psql "$DATABASE
 - Étape 2 : `200`, corps avec `user.name = "Marc"` et `user.email = $EMAIL` (forme `Session` du contrat, `user: SessionUser`). Pas `null`.
 - Étape 3 : exactement 1 ligne, `name = Marc`, email en minuscules.
 
-- [ ] RM8 vérifié
+- [x] RM8 vérifié
 
 ---
 
@@ -101,7 +101,7 @@ Lecture de la base : les vérifications « en base » utilisent `psql "$DATABASE
 - Étape 1 : `200`, `Access-Control-Allow-Credentials: true`, un `Set-Cookie` `better-auth.session_token=…` (`HttpOnly`, `SameSite=Lax`).
 - Étape 2 : `200`, `user.email = $EMAIL`, `user.name = "Marc"`. Pas `null`.
 
-- [ ] RM12 vérifié
+- [x] RM12 vérifié
 
 ---
 
@@ -136,7 +136,7 @@ Lecture de la base : les vérifications « en base » utilisent `psql "$DATABASE
 - Étape 2 : `200`, corps `null`.
 - Étape 3 : `200`, corps `null`. Si l'utilisateur revient ici, la session n'a pas été invalidée en base.
 
-- [ ] RM5 vérifié
+- [x] RM5 vérifié
 
 ---
 
@@ -180,7 +180,7 @@ Lecture de la base : les vérifications « en base » utilisent `psql "$DATABASE
 - Étapes 1 et 2 : `400`, corps exactement de la forme `{ "code": "VALIDATION_ERROR", "message": "<texte en français>" }`, aucun `Set-Cookie` de session. Un corps au format Better Auth (`{ "code": "INVALID_EMAIL", … }`, `PASSWORD_TOO_SHORT`, message en anglais) signifie que le schéma Zod n'est pas branché devant le handler.
 - Étape 3 : 0 ligne.
 
-- [ ] RM10 vérifié
+- [x] RM10 vérifié
 
 ---
 
@@ -217,7 +217,7 @@ Lecture de la base : les vérifications « en base » utilisent `psql "$DATABASE
 - Étape 1 : un statut 4xx (pas 500 ; le contrat ne fixe pas le statut HTTP, seulement le corps), corps `{ "code": "EMAIL_ALREADY_EXISTS", "message": "Un compte avec cet email existe déjà" }`, aucun `Set-Cookie` de session. Une 500 ou un `INTERNAL_ERROR` signifie que la forme réelle de l'erreur ne correspond pas à celle mockée dans le test unitaire.
 - Étape 2 : `count = 1`.
 
-- [ ] RM9 vérifié
+- [x] RM9 vérifié
 
 ---
 
@@ -255,7 +255,7 @@ Lecture de la base : les vérifications « en base » utilisent `psql "$DATABASE
 - Étape 2 : `200` + `Set-Cookie` `better-auth.session_token=…`. Un `INVALID_CREDENTIALS` signifie que le signin ne passe pas par la normalisation.
 - Étape 3 : exactement 1 ligne, en minuscules et sans espaces.
 
-- [ ] RM21 vérifié
+- [x] RM21 vérifié
 
 ---
 
@@ -293,7 +293,7 @@ Lecture de la base : les vérifications « en base » utilisent `psql "$DATABASE
 
 - Étapes 1 et 2 : même statut 4xx (pas 500 ; le contrat ne fixe pas le statut HTTP), même corps `{ "code": "INVALID_CREDENTIALS", "message": "<même texte en français>" }`, aucun `Set-Cookie` de session. Deux messages différents révèleraient lequel des 2 champs est faux, ce que le contrat interdit.
 
-- [ ] RM13 vérifié
+- [x] RM13 vérifié
 
 ---
 
@@ -323,7 +323,7 @@ Lecture de la base : les vérifications « en base » utilisent `psql "$DATABASE
 
 - Étape 2 : `500`, corps exactement `{ "code": "INTERNAL_ERROR", "message": "<texte en français>" }`. Pas de corps vide, pas de message Prisma ou Better Auth en anglais, pas de stack trace. Si curl abandonne au bout de 60 s sans réponse, le timeout n'est pas géré (RM19).
 
-- [ ] RM18, RM19 vérifié
+- [x] RM18, RM19 vérifié
 
 ---
 
