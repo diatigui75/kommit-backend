@@ -24,6 +24,18 @@ if (!betterAuthSecret) {
 
 const port = Number(process.env.PORT ?? 3000)
 
+// Par défaut, les ports de développement de Vite : il prend le port suivant quand le précédent est déjà occupé.
+const devFrontendOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:5175',
+  'http://localhost:5176',
+]
+
+const frontendOrigins = process.env.FRONTEND_ORIGINS
+  ? process.env.FRONTEND_ORIGINS.split(',').map((origin) => origin.trim()).filter(Boolean)
+  : devFrontendOrigins
+
 export const appConfig = {
   port,
   name: packageJson.name,
@@ -31,11 +43,5 @@ export const appConfig = {
   databaseUrl,
   betterAuthSecret,
   betterAuthUrl: process.env.BETTER_AUTH_URL ?? `http://localhost:${port}`,
-  // Les ports de développement de Vite : il prend le port suivant quand le précédent est déjà occupé.
-  frontendOrigins: [
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'http://localhost:5175',
-    'http://localhost:5176',
-  ],
+  frontendOrigins,
 }
