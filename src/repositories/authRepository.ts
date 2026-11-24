@@ -1,7 +1,7 @@
+import type { IncomingHttpHeaders } from 'node:http'
 import { fromNodeHeaders } from 'better-auth/node'
-import type { SessionUser } from '@/types/apiContract.js'
+import type { Session, SessionUser } from '@/types/apiContract.js'
 import type { AuthRepository } from '@/services/auth/authService.js'
-import type { GetSession } from '@/middlewares/requireSession/requireSession.js'
 import { auth } from '@/repositories/authClient.js'
 
 // Le token de session ne doit pas sortir dans le corps de la réponse.
@@ -48,4 +48,4 @@ export const authRepository: AuthRepository = {
 }
 
 // À brancher sur requireSession en F2.
-export const getSessionFromHeaders: GetSession = async (headers) => (await authRepository.getSession(headers)).data
+export const getSessionFromHeaders = async (headers: IncomingHttpHeaders): Promise<Session> => (await authRepository.getSession(headers)).data
