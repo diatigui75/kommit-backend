@@ -30,6 +30,7 @@ kommit-backend/
 │   ├── config/
 │   │   └── appConfig.ts   # port, nom, version, URL de la base, config Better Auth, origins du front
 │   ├── middlewares/
+│   │   ├── authRateLimit.ts  # 5 essais ratés par minute sur sign-in et sign-up → 429
 │   │   ├── corsMiddleware.ts # whitelist des origins CORS, avec credentials
 │   │   ├── errorHandler.ts   # erreur imprévue → 500 INTERNAL_ERROR
 │   │   ├── notFound.ts
