@@ -1,5 +1,3 @@
-// Aucun modèle pour le moment : la modélisation arrivera avec la 1re feature.
-
 generator client {
   provider            = "prisma-client"
   output              = "../src/repositories/generated/prisma"
@@ -9,4 +7,69 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+// Tables de Better Auth 1.7.27 (champs relevés dans @better-auth/core/dist/db/get-tables.mjs).
+// Better Auth génère lui-même les id.
+
+model User {
+  id            String    @id
+  name          String
+  // Stocké en minuscules et sans espaces autour : l'unicité est insensible à la casse (RM21).
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now()) @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
 }

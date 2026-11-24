@@ -1,21 +1,46 @@
+import { z } from 'zod'
 import type { ApiError } from '@/types/apiContract.js'
 
-// Stub KOM-06 : la logique (schéma Zod, trim + lowercase) reste à écrire.
+// Les mêmes valeurs servent à la config Better Auth (repositories/authClient.ts) et aux messages d'erreur.
+export const PASSWORD_MIN_LENGTH = 8
+export const PASSWORD_MAX_LENGTH = 128
 
-export const PASSWORD_MIN_LENGTH = 0
-export const PASSWORD_MAX_LENGTH = 0
+// Le trim et la mise en minuscules passent avant le contrôle du format, d'où le pipe :
+// ' MARC@x.com ' devient 'marc@x.com' avant d'être validé (RM21).
+export const emailSchema = z
+  .string({ error: "L'email est requis." })
+  .trim()
+  .toLowerCase()
+  .pipe(z.email({ error: "L'email n'est pas valide." }))
 
-export type SignupBody = {
-  name: string
-  email: string
-  password: string
-}
+const signupSchema = z.object(
+  {
+    name: z.string({ error: 'Le prénom est requis.' }).trim().min(1, { error: 'Le prénom est requis.' }),
+    email: emailSchema,
+    password: z
+      .string({ error: 'Le mot de passe est requis.' })
+      .min(PASSWORD_MIN_LENGTH, {
+        error: `Le mot de passe doit contenir au moins ${PASSWORD_MIN_LENGTH} caractères.`,
+      })
+      .max(PASSWORD_MAX_LENGTH, {
+        error: `Le mot de passe doit contenir au plus ${PASSWORD_MAX_LENGTH} caractères.`,
+      }),
+  },
+  { error: 'Le corps de la requête est invalide.' },
+)
+
+export type SignupBody = z.infer<typeof signupSchema>
 
 export type SignupValidation =
   | { success: true; data: SignupBody }
   | { success: false; error: ApiError }
 
-export const validateSignupBody = (_body: unknown): SignupValidation => ({
-  success: false,
-  error: { code: 'INTERNAL_ERROR', message: '' },
-})
+export const validateSignupBody = (body: unknown): SignupValidation => {
+  const parsed = signupSchema.safeParse(body)
+
+  if (!parsed.success) {
+    return { success: false, error: { code: 'VALIDATION_ERROR', message: parsed.error.issues[0].message } }
+  }
+
+  return { success: true, data: parsed.data }
+}

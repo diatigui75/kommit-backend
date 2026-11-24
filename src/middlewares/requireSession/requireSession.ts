@@ -2,11 +2,20 @@ import type { IncomingHttpHeaders } from 'node:http'
 import type { NextFunction, Request, Response } from 'express'
 import type { Session } from '@/types/apiContract.js'
 
-// Stub KOM-06 : la logique (pas de session → 401) reste à écrire.
-
-// Port : lit la session à partir des en-têtes de la requête (le cookie). Branché sur Better Auth en prod.
+// Port : lit la session à partir des en-têtes de la requête (le cookie).
+// Implémenté par getSessionFromHeaders dans repositories/authRepository.ts.
 export type GetSession = (headers: IncomingHttpHeaders) => Promise<Session>
 
+// Pas encore monté sur une route : il sera branché sur GET /standups en F2 (RM2).
 export const createRequireSession =
-  (_getSession: GetSession) =>
-  async (_req: Request, _res: Response, _next: NextFunction): Promise<void> => {}
+  (getSession: GetSession) =>
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const session = await getSession(req.headers)
+
+    if (!session) {
+      res.status(401).send()
+      return
+    }
+
+    next()
+  }
