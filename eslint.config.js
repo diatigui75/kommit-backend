@@ -7,14 +7,11 @@ export default tseslint.config(
   tseslint.configs.recommended,
   {
     rules: {
-      // Un préfixe _ marque un paramètre volontairement inutilisé
-      // (ex. le _next du errorHandler, les stubs des services à venir).
       '@typescript-eslint/no-unused-vars': [
         'error',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
       ],
-      // Imports internes via l'alias @/ (jamais ./ ni ../). Le regex attrape tout chemin
-      // relatif, imbriqué ou non ; @/ et les paquets externes passent.
+      // Le regex attrape tout chemin relatif (./ ou ../, imbriqué ou non).
       'no-restricted-imports': [
         'error',
         {

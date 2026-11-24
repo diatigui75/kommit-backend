@@ -4,7 +4,7 @@ import type { AuthRepository } from '@/services/auth/authService.js'
 import type { GetSession } from '@/middlewares/requireSession/requireSession.js'
 import { auth } from '@/repositories/authClient.js'
 
-// Ne garde que les champs du contrat : ni token, ni session, ni champs internes de Better Auth.
+// Le token de session ne doit pas sortir dans le corps de la réponse.
 const toSessionUser = ({ id, name, email }: SessionUser): SessionUser => ({ id, name, email })
 
 export const authRepository: AuthRepository = {
@@ -47,5 +47,5 @@ export const authRepository: AuthRepository = {
   },
 }
 
-// Implémentation réelle du port de requireSession, à brancher en F2.
+// À brancher sur requireSession en F2.
 export const getSessionFromHeaders: GetSession = async (headers) => (await authRepository.getSession(headers)).data

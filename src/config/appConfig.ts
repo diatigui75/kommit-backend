@@ -32,7 +32,6 @@ export const appConfig = {
   betterAuthSecret,
   betterAuthUrl: process.env.BETTER_AUTH_URL ?? `http://localhost:${port}`,
   // Les ports de développement de Vite : il prend le port suivant quand le précédent est déjà occupé.
-  // Liste partagée par le CORS et par les trustedOrigins de Better Auth.
   frontendOrigins: [
     'http://localhost:5173',
     'http://localhost:5174',

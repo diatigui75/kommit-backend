@@ -4,10 +4,8 @@ import type { SignupBody } from '@/services/auth/signupValidation/signupValidati
 import type { SigninBody } from '@/services/auth/signinValidation.js'
 import { toAuthApiError } from '@/services/auth/authErrorMapping/authErrorMapping.js'
 
-// Ce que renvoie le fournisseur d'auth : la donnée, plus les cookies de session à poser.
 export type AuthResult<T> = { data: T; cookies: string[] }
 
-// Port : ce dont le service a besoin pour authentifier. Implémenté par repositories/authRepository.ts.
 export type AuthRepository = {
   signUp: (body: SignupBody, headers: IncomingHttpHeaders) => Promise<AuthResult<Session>>
   signIn: (body: SigninBody, headers: IncomingHttpHeaders) => Promise<AuthResult<Session>>
@@ -25,7 +23,6 @@ const attempt = async <T>(call: () => Promise<AuthResult<T>>): Promise<AuthOutco
     return { success: true, data, cookies }
   } catch (error) {
     const apiError = toAuthApiError(error)
-    // Une panne n'est pas renvoyée brute au client : on la garde dans les logs.
     if (apiError.code === 'INTERNAL_ERROR') console.error(error)
     return { success: false, error: apiError }
   }

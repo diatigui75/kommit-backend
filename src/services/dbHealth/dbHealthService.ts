@@ -1,4 +1,3 @@
-// Port : ce dont le service a besoin pour sonder la base. Implémenté par repositories/dbHealthRepository.ts.
 export type DbHealthRepository = {
   ping: () => Promise<void>
 }

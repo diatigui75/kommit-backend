@@ -5,8 +5,7 @@ import type { ApiError } from '@/types/apiContract.js'
 export const PASSWORD_MIN_LENGTH = 8
 export const PASSWORD_MAX_LENGTH = 128
 
-// Le trim et la mise en minuscules passent avant le contrôle du format, d'où le pipe :
-// ' MARC@x.com ' devient 'marc@x.com' avant d'être validé (RM21).
+// Le pipe fait passer trim et minuscules avant le contrôle du format (RM21).
 export const emailSchema = z
   .string({ error: "L'email est requis." })
   .trim()

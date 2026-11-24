@@ -4,7 +4,7 @@ import { validateBody } from '@/middlewares/validateBody.js'
 import { validateSignupBody } from '@/services/auth/signupValidation/signupValidation.js'
 import { validateSigninBody } from '@/services/auth/signinValidation.js'
 
-// Les chemins de Better Auth, sans nouvelle route d'auth.
+// Mêmes chemins que le handler de Better Auth : le contrat exclut les routes d'auth maison.
 export const authRoutes = Router()
 
 authRoutes.post('/sign-up/email', validateBody(validateSignupBody), postSignUp)

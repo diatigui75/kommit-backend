@@ -1,6 +1,5 @@
 import type { ApiError } from '@/types/apiContract.js'
 
-// Ré-emballe les erreurs de Better Auth et de Prisma en ApiError.
 // Le service n'importe ni Better Auth ni Prisma : il reconnaît leurs erreurs à leur forme.
 
 const EMAIL_ALREADY_EXISTS: ApiError = {

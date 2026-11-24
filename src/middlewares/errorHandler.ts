@@ -6,9 +6,7 @@ const internalError: ApiError = {
   message: 'Une erreur interne est survenue. Réessaie dans un instant.',
 }
 
-// Express reconnaît un middleware d'erreur à ses 4 paramètres.
 export const errorHandler = (err: unknown, _req: Request, res: Response, next: NextFunction) => {
-  // La réponse est déjà partie : seul le handler par défaut d'Express peut encore couper la connexion.
   if (res.headersSent) {
     next(err)
     return

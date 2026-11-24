@@ -2,8 +2,6 @@ import type { IncomingHttpHeaders } from 'node:http'
 import type { NextFunction, Request, Response } from 'express'
 import type { Session } from '@/types/apiContract.js'
 
-// Port : lit la session à partir des en-têtes de la requête (le cookie).
-// Implémenté par getSessionFromHeaders dans repositories/authRepository.ts.
 export type GetSession = (headers: IncomingHttpHeaders) => Promise<Session>
 
 // Pas encore monté sur une route : il sera branché sur GET /standups en F2 (RM2).
