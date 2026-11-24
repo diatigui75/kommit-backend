@@ -25,7 +25,10 @@ kommit-backend/
 │   ├── middlewares/
 │   │   ├── corsMiddleware.ts # whitelist des origins CORS
 │   │   ├── errorHandler.ts
-│   │   └── notFound.ts
+│   │   ├── notFound.ts
+│   │   └── requireSession/
+│   │       ├── requireSession.ts      # pas de session → 401 (stub KOM-06)
+│   │       └── requireSession.test.ts
 │   ├── routes/
 │   │   ├── index.ts       # router principal
 │   │   ├── dbHealthRoutes.ts
@@ -40,6 +43,13 @@ kommit-backend/
 │   │   ├── healthController.ts
 │   │   └── rootController.ts
 │   ├── services/
+│   │   ├── auth/
+│   │   │   ├── authErrorMapping/      # erreurs Better Auth / Prisma → ApiError (stub KOM-06)
+│   │   │   │   ├── authErrorMapping.ts
+│   │   │   │   └── authErrorMapping.test.ts
+│   │   │   └── signupValidation/      # validation du signup (stub KOM-06)
+│   │   │       ├── signupValidation.ts
+│   │   │       └── signupValidation.test.ts
 │   │   ├── dbHealth/
 │   │   │   └── dbHealthService.ts
 │   │   ├── health/
@@ -55,5 +65,6 @@ kommit-backend/
 ├── pnpm-lock.yaml
 ├── pnpm-workspace.yaml    # scripts d'installation autorisés
 ├── prisma.config.ts       # config de la CLI Prisma
-└── tsconfig.json
+├── tsconfig.json
+└── vitest.config.ts       # config Vitest (alias @/ via vite-tsconfig-paths)
 ```
