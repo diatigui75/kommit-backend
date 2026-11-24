@@ -3,14 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^24.19.2",
     "@types/pg": "^8.23.1",
+    "eslint": "^10.15.0",
     "prisma": "7.10.1",
     "tsc-alias": "^1.9.10",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",
+    "typescript-eslint": "^8.73.0",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^5.1.1"
   },
@@ -20,7 +23,8 @@
     "start": "node --env-file-if-exists=.env dist/index.js",
     "typecheck": "tsc --noEmit",
     "postinstall": "prisma generate",
-    "test": "vitest"
+    "test": "vitest",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
