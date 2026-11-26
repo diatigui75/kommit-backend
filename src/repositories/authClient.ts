@@ -18,4 +18,9 @@ export const auth = betterAuth({
     minPasswordLength: PASSWORD_MIN_LENGTH,
     maxPasswordLength: PASSWORD_MAX_LENGTH,
   },
+  // Vérifié dans better-auth 1.7.27 : Secure suit le https de baseURL, mais SameSite reste Lax, et un cookie Lax
+  // n'est pas renvoyé par un front sur un autre domaine (KOM-11 RM4). En http local, None serait refusé sans Secure.
+  advanced: appConfig.betterAuthUrl.startsWith('https://')
+    ? { defaultCookieAttributes: { sameSite: 'none', secure: true } }
+    : {},
 })
