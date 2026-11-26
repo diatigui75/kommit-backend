@@ -15,6 +15,9 @@ kommit-backend/
 │   ├── rules/             # conventions du repo
 │   ├── skills/            # skills Claude Code
 │   └── settings.json      # branchement des hooks
+├── .github/
+│   └── workflows/
+│       └── ci.yml         # CI : lint, build, tests sur les PR vers dev
 ├── .vscode/
 │   └── settings.json
 ├── docs/
@@ -78,12 +81,14 @@ kommit-backend/
 │   └── smokes-KOM-06.md     # scénarios de test manuels de KOM-06
 ├── .env.example           # modèle des variables d'environnement
 ├── .gitignore
+├── .nvmrc                 # version de Node (CI et Render)
 ├── CLAUDE.md              # ce fichier
 ├── eslint.config.js       # ESLint : imports en @/ obligatoires
 ├── package.json
 ├── pnpm-lock.yaml
 ├── pnpm-workspace.yaml    # scripts d'installation autorisés
 ├── prisma.config.ts       # config de la CLI Prisma
+├── render.yaml            # Blueprint Render du serveur backend de DEV
 ├── tsconfig.json
 └── vitest.config.ts       # config Vitest (alias @/ via vite-tsconfig-paths)
 ```

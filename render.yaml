@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: kommit-backend-diatigui-dev
+    runtime: node
+    plan: free
+    branch: dev
+    autoDeploy: true
+    buildCommand: pnpm install --frozen-lockfile && pnpm build
+    startCommand: pnpm start
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: BETTER_AUTH_SECRET
+        sync: false
+      - key: BETTER_AUTH_URL
+        value: https://kommit-backend-diatigui-dev.onrender.com
+      - key: FRONTEND_ORIGINS
+        value: http://localhost:5173,https://kommit-frontend-diatigui-dev.vercel.app
