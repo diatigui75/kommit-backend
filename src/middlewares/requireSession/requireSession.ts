@@ -4,7 +4,7 @@ import type { Session } from '@/types/apiContract.js'
 
 export type GetSession = (headers: IncomingHttpHeaders) => Promise<Session>
 
-// Pas encore monté sur une route : il sera branché sur GET /standups en F2 (RM2).
+// Pose l'utilisateur dans res.locals.sessionUser, comme validateBody pose res.locals.body.
 export const createRequireSession =
   (getSession: GetSession) =>
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -15,5 +15,6 @@ export const createRequireSession =
       return
     }
 
+    res.locals.sessionUser = session.user
     next()
   }

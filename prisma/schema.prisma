@@ -23,6 +23,7 @@ model User {
   updatedAt     DateTime  @default(now()) @updatedAt
   sessions      Session[]
   accounts      Account[]
+  standups      Standup[]
 
   @@map("user")
 }
@@ -72,4 +73,22 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+// F2 : le récap du daily standup, un par utilisateur et par jour.
+model Standup {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Jour civil de Paris calculé par le serveur, sans heure : pas de décalage possible entre fuseaux (CA35).
+  jour      DateTime @db.Date
+  fait      String[]
+  blocages  String[]
+  prevu     String[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // C'est la base qui tient « un seul standup par jour », y compris entre 2 onglets (CA9).
+  @@unique([userId, jour])
+  @@map("standup")
 }

@@ -26,7 +26,7 @@ kommit-backend/
 │   └── workflow-ticket-backend.md
 ├── prisma/
 │   ├── migrations/        # migrations Prisma
-│   └── schema.prisma      # schéma Prisma : tables de Better Auth
+│   └── schema.prisma      # schéma Prisma : tables de Better Auth et Standup
 ├── src/
 │   ├── index.ts           # démarrage du serveur
 │   ├── app.ts             # assemblage de l'app Express
@@ -39,25 +39,29 @@ kommit-backend/
 │   │   ├── notFound.ts
 │   │   ├── validateBody.ts   # validation du corps → 400 ou res.locals.body
 │   │   └── requireSession/
-│   │       ├── requireSession.ts      # pas de session → 401 (monté en F2)
+│   │       ├── requireSession.ts      # pas de session → 401, sinon res.locals.sessionUser
 │   │       └── requireSession.test.ts
 │   ├── routes/
 │   │   ├── index.ts       # router principal
 │   │   ├── authRoutes.ts  # /api/auth : routes de Better Auth
 │   │   ├── dbHealthRoutes.ts
 │   │   ├── healthRoutes.ts
-│   │   └── rootRoutes.ts
+│   │   ├── rootRoutes.ts
+│   │   └── standupRoutes.ts # /standups : today, validation, conversation SSE (session requise)
 │   ├── repositories/
 │   │   ├── generated/     # client Prisma généré (ignoré par git)
 │   │   ├── authClient.ts  # instance unique de Better Auth
 │   │   ├── authRepository.ts # appels auth.api.*, cookies de session
 │   │   ├── dbHealthRepository.ts
-│   │   └── prismaClient.ts # instance unique du client Prisma
+│   │   ├── groqClient.ts  # client Groq réel, implémente le port LlmClient
+│   │   ├── prismaClient.ts # instance unique du client Prisma
+│   │   └── standupRepository.ts # upsert du standup sur UNIQUE (userId, jour)
 │   ├── controllers/
 │   │   ├── authController.ts
 │   │   ├── dbHealthController.ts
 │   │   ├── healthController.ts
-│   │   └── rootController.ts
+│   │   ├── rootController.ts
+│   │   └── standupController.ts # état du jour, validation, flux SSE
 │   ├── services/
 │   │   ├── auth/
 │   │   │   ├── authService/           # orchestrateur : appels d'auth + ré-emballage des erreurs
@@ -74,13 +78,39 @@ kommit-backend/
 │   │   │   └── dbHealthService.ts
 │   │   ├── health/
 │   │   │   └── healthService.ts
-│   │   └── root/
-│   │       └── rootService.ts
+│   │   ├── root/
+│   │   │   └── rootService.ts
+│   │   └── standup/
+│   │       ├── standupPrompts.ts      # prompt système, instruction de récap et marqueur de fin (fournis par KOM-18)
+│   │       ├── llmClient.ts           # port du LLM, formes reprises de groq-sdk
+│   │       ├── standupService/        # orchestrateur : état du jour, enregistrement du standup
+│   │       │   ├── standupService.ts
+│   │       │   └── standupService.test.ts
+│   │       ├── standupDay/            # jour civil en Europe/Paris
+│   │       │   ├── standupDay.ts
+│   │       │   └── standupDay.test.ts
+│   │       ├── standupValidation/     # validation du corps de POST /standups (schéma Zod)
+│   │       │   ├── standupValidation.ts
+│   │       │   └── standupValidation.test.ts
+│   │       ├── conversationValidation/ # validation du corps de POST /standups/conversation
+│   │       │   ├── conversationValidation.ts
+│   │       │   └── conversationValidation.test.ts
+│   │       ├── standupConversation/   # flux LLM → événements SSE, retrait du marqueur
+│   │       │   ├── standupConversation.ts
+│   │       │   └── standupConversation.test.ts
+│   │       ├── summaryGeneration/     # récap JSON du LLM, retry unique
+│   │       │   ├── summaryGeneration.ts
+│   │       │   └── summaryGeneration.test.ts
+│   │       └── llmErrorMapping/       # erreurs Groq → ApiError
+│   │           ├── llmErrorMapping.ts
+│   │           └── llmErrorMapping.test.ts
 │   └── types/
 │       └── apiContract.ts # contrat de l'API, copie du front
 ├── testing/
 │   ├── inventaire-KOM-06.md # classement des règles de KOM-06
-│   └── smokes-KOM-06.md     # scénarios de test manuels de KOM-06
+│   ├── inventaire-KOM-18.md # classement des règles de KOM-18
+│   ├── smokes-KOM-06.md     # scénarios de test manuels de KOM-06
+│   └── smokes-KOM-18.md     # scénarios de test manuels de KOM-18
 ├── .env.example           # modèle des variables d'environnement
 ├── .gitignore
 ├── .nvmrc                 # version de Node (CI et Render)

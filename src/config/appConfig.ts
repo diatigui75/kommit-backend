@@ -44,4 +44,8 @@ export const appConfig = {
   betterAuthSecret,
   betterAuthUrl: process.env.BETTER_AUTH_URL ?? `http://localhost:${port}`,
   frontendOrigins,
+  // Optionnelle au démarrage : sans elle, seul le standup échoue (LLM_UNAVAILABLE), le reste de l'API tourne.
+  groqApiKey: process.env.GROQ_API_KEY,
+  // llama-3.3-70b-versatile n'est plus accessible sans contrat (« Contact Sales » sur console.groq.com, 2026-11-27).
+  groqModel: process.env.GROQ_MODEL ?? 'openai/gpt-oss-120b',
 }
