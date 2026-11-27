@@ -1,14 +1,10 @@
 import type { IncomingHttpHeaders } from 'node:http'
 import type { NextFunction, Request, Response } from 'express'
-import type { Session, SessionUser } from '@/types/apiContract.js'
+import type { Session } from '@/types/apiContract.js'
 
 export type GetSession = (headers: IncomingHttpHeaders) => Promise<Session>
 
-const sessionUsers = new WeakMap<Request, SessionUser>()
-
-// Pour un handler monté derrière requireSession : l'utilisateur de la session est toujours là.
-export const sessionUserOf = (req: Request): SessionUser => sessionUsers.get(req)!
-
+// Pose l'utilisateur dans res.locals.sessionUser, comme validateBody pose res.locals.body.
 export const createRequireSession =
   (getSession: GetSession) =>
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -19,6 +15,6 @@ export const createRequireSession =
       return
     }
 
-    sessionUsers.set(req, session.user)
+    res.locals.sessionUser = session.user
     next()
   }

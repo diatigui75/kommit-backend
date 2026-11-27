@@ -39,7 +39,7 @@ kommit-backend/
 │   │   ├── notFound.ts
 │   │   ├── validateBody.ts   # validation du corps → 400 ou res.locals.body
 │   │   └── requireSession/
-│   │       ├── requireSession.ts      # pas de session → 401, sinon l'utilisateur via sessionUserOf
+│   │       ├── requireSession.ts      # pas de session → 401, sinon res.locals.sessionUser
 │   │       └── requireSession.test.ts
 │   ├── routes/
 │   │   ├── index.ts       # router principal
