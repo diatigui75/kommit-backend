@@ -36,6 +36,12 @@ describe('KOM-18 · 1. Validation du corps de POST /standups/conversation', () =
       expect(validateConversationBody({ messages })).toEqual(refusedForValidation)
     })
 
+    it('refuse un fil sans aucun message', () => {
+      const noMessages: Message[] = []
+
+      expect(validateConversationBody({ messages: noMessages })).toEqual(refusedForValidation)
+    })
+
     it('refuse un premier message vide', () => {
       const messages: Message[] = [{ role: 'user', content: '' }]
 

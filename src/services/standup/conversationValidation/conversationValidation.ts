@@ -12,7 +12,8 @@ const conversationBodySchema = z.object(
     messages: z
       .array(messageSchema, { error: 'Le fil de la conversation est invalide.' })
       .min(1, { error: 'Le message est requis.' })
-      .refine((messages) => messages.at(-1)!.content.trim().length > 0, { error: 'Le message est requis.' }),
+      // Zod 4 exécute le refine même quand min(1) a échoué : le fil vide doit être géré ici aussi.
+      .refine((messages) => (messages.at(-1)?.content.trim().length ?? 0) > 0, { error: 'Le message est requis.' }),
   },
   { error: 'Le corps de la requête est invalide.' },
 )
