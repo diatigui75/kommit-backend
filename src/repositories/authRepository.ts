@@ -1,8 +1,9 @@
 import type { IncomingHttpHeaders } from 'node:http'
 import { fromNodeHeaders } from 'better-auth/node'
 import type { Session, SessionUser } from '@/types/apiContract.js'
-import type { AuthRepository } from '@/services/auth/authService.js'
+import type { AuthRepository } from '@/services/auth/authService/authService.js'
 import { auth } from '@/repositories/authClient.js'
+import { prisma } from '@/repositories/prismaClient.js'
 
 // Le token de session ne doit pas sortir dans le corps de la réponse.
 const toSessionUser = ({ id, name, email }: SessionUser): SessionUser => ({ id, name, email })
@@ -45,6 +46,8 @@ export const authRepository: AuthRepository = {
       cookies: responseHeaders.getSetCookie(),
     }
   },
+
+  emailExists: async (email) => (await prisma.user.findUnique({ where: { email }, select: { id: true } })) !== null,
 }
 
 // À brancher sur requireSession en F2.

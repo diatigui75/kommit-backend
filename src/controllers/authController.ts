@@ -2,7 +2,7 @@ import type { Request, Response } from 'express'
 import type { ApiError } from '@/types/apiContract.js'
 import type { SignupBody } from '@/services/auth/signupValidation/signupValidation.js'
 import type { SigninBody } from '@/services/auth/signinValidation.js'
-import { type AuthOutcome, readSession, signIn, signOut, signUp } from '@/services/auth/authService.js'
+import { type AuthOutcome, readSession, signIn, signOut, signUp } from '@/services/auth/authService/authService.js'
 import { authRepository } from '@/repositories/authRepository.js'
 
 const httpStatusOf: Partial<Record<ApiError['code'], number>> = {

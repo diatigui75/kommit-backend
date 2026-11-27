@@ -60,7 +60,9 @@ kommit-backend/
 │   │   └── rootController.ts
 │   ├── services/
 │   │   ├── auth/
-│   │   │   ├── authService.ts         # orchestrateur : appels d'auth + ré-emballage des erreurs
+│   │   │   ├── authService/           # orchestrateur : appels d'auth + ré-emballage des erreurs
+│   │   │   │   ├── authService.ts
+│   │   │   │   └── authService.test.ts
 │   │   │   ├── signinValidation.ts    # validation du signin
 │   │   │   ├── authErrorMapping/      # erreurs Better Auth / Prisma → ApiError
 │   │   │   │   ├── authErrorMapping.ts
