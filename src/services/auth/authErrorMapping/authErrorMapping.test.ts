@@ -5,7 +5,7 @@ import { toAuthApiError } from '@/services/auth/authErrorMapping/authErrorMappin
 
 // Formes d'erreur relevées sur better-auth 1.7.27 et Prisma 7.10.1 (sonde réelle, 2026-11-24) :
 // - Better Auth lève un APIError { status, statusCode, body: { code, message } } ;
-// - Prisma lève un PrismaClientKnownRequestError { code: 'P2002', meta } sur une violation UNIQUE.
+// - Prisma lève un PrismaClientKnownRequestError { code, meta }.
 
 const nonBlankMessage = expect.stringMatching(/\S/)
 
@@ -26,18 +26,6 @@ describe('KOM-06 · ré-emballage des erreurs Better Auth et Prisma en ApiError'
         })
 
         expect(toAuthApiError(userAlreadyExistsError)).toEqual({
-          code: 'EMAIL_ALREADY_EXISTS',
-          message: 'Un compte avec cet email existe déjà',
-        })
-      })
-
-      it('ré-emballe une violation UNIQUE Prisma (P2002) en EMAIL_ALREADY_EXISTS, jamais en erreur interne', () => {
-        const uniqueViolationError = createPrismaKnownError(
-          'P2002',
-          'Unique constraint failed on the fields: (`email`)',
-        )
-
-        expect(toAuthApiError(uniqueViolationError)).toEqual({
           code: 'EMAIL_ALREADY_EXISTS',
           message: 'Un compte avec cet email existe déjà',
         })
@@ -89,7 +77,7 @@ describe('KOM-06 · ré-emballage des erreurs Better Auth et Prisma en ApiError'
           'une erreur Better Auth au code non reconnu',
           new APIError('BAD_REQUEST', { code: 'FAILED_TO_CREATE_SESSION', message: rawErrorMessage }),
         ],
-        ['une erreur Prisma connue mais non mappée (P2025)', createPrismaKnownError('P2025', rawErrorMessage)],
+        ['une erreur Prisma connue (P2002)', createPrismaKnownError('P2002', rawErrorMessage)],
         [
           'une base injoignable (erreur d’initialisation Prisma)',
           new Prisma.PrismaClientInitializationError(rawErrorMessage, Prisma.prismaVersion.client, 'P1001'),
