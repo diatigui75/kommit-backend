@@ -26,7 +26,7 @@ kommit-backend/
 │   └── workflow-ticket-backend.md
 ├── prisma/
 │   ├── migrations/        # migrations Prisma
-│   └── schema.prisma      # schéma Prisma : tables de Better Auth
+│   └── schema.prisma      # schéma Prisma : tables de Better Auth et Standup
 ├── src/
 │   ├── index.ts           # démarrage du serveur
 │   ├── app.ts             # assemblage de l'app Express
@@ -39,25 +39,29 @@ kommit-backend/
 │   │   ├── notFound.ts
 │   │   ├── validateBody.ts   # validation du corps → 400 ou res.locals.body
 │   │   └── requireSession/
-│   │       ├── requireSession.ts      # pas de session → 401 (monté en F2)
+│   │       ├── requireSession.ts      # pas de session → 401, sinon l'utilisateur via sessionUserOf
 │   │       └── requireSession.test.ts
 │   ├── routes/
 │   │   ├── index.ts       # router principal
 │   │   ├── authRoutes.ts  # /api/auth : routes de Better Auth
 │   │   ├── dbHealthRoutes.ts
 │   │   ├── healthRoutes.ts
-│   │   └── rootRoutes.ts
+│   │   ├── rootRoutes.ts
+│   │   └── standupRoutes.ts # /standups : today, validation, conversation SSE (session requise)
 │   ├── repositories/
 │   │   ├── generated/     # client Prisma généré (ignoré par git)
 │   │   ├── authClient.ts  # instance unique de Better Auth
 │   │   ├── authRepository.ts # appels auth.api.*, cookies de session
 │   │   ├── dbHealthRepository.ts
-│   │   └── prismaClient.ts # instance unique du client Prisma
+│   │   ├── groqClient.ts  # client Groq réel, implémente le port LlmClient
+│   │   ├── prismaClient.ts # instance unique du client Prisma
+│   │   └── standupRepository.ts # upsert du standup sur UNIQUE (userId, jour)
 │   ├── controllers/
 │   │   ├── authController.ts
 │   │   ├── dbHealthController.ts
 │   │   ├── healthController.ts
-│   │   └── rootController.ts
+│   │   ├── rootController.ts
+│   │   └── standupController.ts # état du jour, validation, flux SSE
 │   ├── services/
 │   │   ├── auth/
 │   │   │   ├── authService/           # orchestrateur : appels d'auth + ré-emballage des erreurs

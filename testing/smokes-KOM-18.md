@@ -102,7 +102,8 @@ Lecture de la base : la table du standup est supposée s'appeler `standup` (`@@m
 - Étape 1 : les lignes `data: {"type":"token",…}` apparaissent progressivement dans le terminal. Si tout arrive d'un coup à la fin, le flux est mis en tampon (compression, absence de `flush`, en-têtes pas envoyés tout de suite).
 - Étape 2 : `HTTP/1.1 200`, `Content-Type: text/event-stream`, `Access-Control-Allow-Credentials: true`. Le texte recollé est une phrase lisible en français. Le `grep -c` affiche `0` : un `1` signifie que le marqueur, entier ou coupé, n'est pas retiré.
 
-- [ ] CA2, CA4 vérifié
+- [x] CA2, CA4 vérifié
+  Joué le 2026-11-27 : `200`, `text/event-stream`, `Access-Control-Allow-Credentials: true`, 9 à 18 tokens par réponse, marqueur jamais visible (3 essais).
 
 ---
 
@@ -139,7 +140,8 @@ Lecture de la base : la table du standup est supposée s'appeler `standup` (`@@m
 - Étape 1 : l'IA ne commente pas le match, elle recadre poliment et demande ce qui a été fait hier. `other_events` n'affiche rien (pas de `summary`).
 - Étape 2 : l'IA prend note ou non du blocage, mais **redemande ce qui a été fait hier** ; elle ne passe pas à « aujourd'hui » et n'invente pas de contenu pour hier. `other_events` n'affiche rien.
 
-- [ ] CA3 vérifié
+- [x] CA3 vérifié
+  Joué le 2026-11-27 : la digression sur le match est recadrée vers « Qu'as-tu fait hier ? » ; la réponse hors sujet (blocage CI) donne « Qu'as-tu fait hier ? ». Aucun `summary`.
 
 ---
 
@@ -164,7 +166,8 @@ Lecture de la base : la table du standup est supposée s'appeler `standup` (`@@m
 - Aucune ligne : le modèle n'a pas émis le marqueur. Rejouer CA2, CA4 2 ou 3 fois ; si le `summary` ne tombe jamais, l'heuristique du `DONE_MARKER` ne tient pas avec le vrai modèle.
 - Une ligne `{"type":"error","error":{"code":"SUMMARY_MALFORMED",…}}` : le marqueur est bien détecté, mais la sortie réelle du modèle n'est pas acceptée par le parsing, même après le retry.
 
-- [ ] CA5 vérifié
+- [x] CA5 vérifié
+  Joué le 2026-11-27 : 3 essais sur 3, un seul `summary`, `blocages: []`.
 
 ---
 
@@ -208,7 +211,8 @@ Lecture de la base : la table du standup est supposée s'appeler `standup` (`@@m
 - Étape 2 : statut 2xx (le contrat ne fixe pas 200 ou 201).
 - Étape 3 : `done: true`, `standup.jour` égal à `$TODAY`, `standup.summary` identique à `$SUMMARY_A`, `standup.id` non vide. `done: false` après l'étape 2 signifie que la lecture ne retrouve pas la ligne écrite (jour stocké et jour cherché différents).
 
-- [ ] CA1, CA8 vérifié
+- [x] CA1, CA8 vérifié
+  Joué le 2026-11-27 : `{"done":false,"standup":null}` puis, après le POST, `done: true`, `jour` = `2026-11-27`, récap identique.
 
 ---
 
@@ -238,7 +242,8 @@ Lecture de la base : la table du standup est supposée s'appeler `standup` (`@@m
 - Étape 1 : un JSON de forme `Standup`, `jour` = `$TODAY`, `summary` identique à `$SUMMARY_B`.
 - Étape 2 : exactement 1 ligne, son `id` égal à celui de la réponse, son jour = `$TODAY`, son récap = `$SUMMARY_B`.
 
-- [ ] CA6 vérifié
+- [x] CA6 vérifié
+  Joué le 2026-11-27 : réponse `Standup` avec `jour` = `2026-11-27` et le récap B. Vérification `psql` non jouée (la session n'a pas accès au fichier d'environnement) ; `GET /standups/today` rend la même ligne (même `id`).
 
 ---
 
@@ -270,7 +275,8 @@ Lecture de la base : la table du standup est supposée s'appeler `standup` (`@@m
 - Étape 1 : statut 2xx, `jour` = `$TODAY` dans la réponse (pas `2020-01-01`). Un `400 VALIDATION_ERROR` signifie que le schéma refuse les champs inconnus au lieu de les ignorer : le client ne force toujours pas de date, mais l'écart avec l'inventaire (« date du corps ignorée ») est à trancher.
 - Étape 2 : 1 seule ligne, aucune à `2020-01-01`. Avec `@db.Date` : exactement `$TODAY`. Avec `DateTime` : la valeur doit retomber sur `$TODAY` ; une valeur à `22:00` ou `23:00` la veille signifie un décalage à la conversion.
 
-- [ ] CA35 vérifié
+- [x] CA35 vérifié
+  Joué le 2026-11-27 : `200`, `jour: "2026-11-27"` malgré `"jour":"2020-01-01"` dans le corps. Vérification `psql` non jouée (la session n'a pas accès au fichier d'environnement).
 
 ---
 
@@ -313,7 +319,8 @@ Lecture de la base : la table du standup est supposée s'appeler `standup` (`@@m
 - Étape 1 : 2 statuts 2xx. En base, exactement 1 ligne, jour = `$TODAY`, récap = `$SUMMARY_A` (le dernier envoyé).
 - Étape 2 : 2 statuts 2xx. Un `500` / `INTERNAL_ERROR` sur l'une des 2 signifie que l'upsert n'est pas atomique (lecture puis écriture, ou upsert Prisma non natif qui lève `P2002` en concurrence). En base, toujours exactement 1 ligne, portant l'un des 2 récaps.
 
-- [ ] CA9 vérifié
+- [x] CA9 vérifié
+  Joué le 2026-11-27 : 2 POST en série puis 2 en parallèle, 4 réponses `200`, toujours le même `id`, donc une seule ligne. Comptage `psql` non joué (la session n'a pas accès au fichier d'environnement).
 
 ---
 
@@ -354,7 +361,8 @@ Lecture de la base : la table du standup est supposée s'appeler `standup` (`@@m
 - Étape 2 : en-têtes `200` + `Content-Type: text/event-stream`, puis exactement 1 événement `{"type":"error","error":{"code":"LLM_UNAVAILABLE","message":"<texte en français>"}}`, aucun `token`, aucun `summary`, et le flux se ferme (curl rend la main avant `--max-time`). La réponse peut mettre quelques secondes : le SDK retente avant d'abandonner.
 - Une réponse `500` JSON ou un `INTERNAL_ERROR` signifie que l'erreur finit dans `errorHandler` au lieu du flux. Un statut 5xx avec un corps `LLM_UNAVAILABLE` signifie que l'appel à Groq est fait avant l'envoi des en-têtes SSE, ce qui s'écarte du contrat (« erreur pendant le flux → événement `error` »). Si curl tourne jusqu'aux 120 s, le timeout n'est pas géré.
 
-- [ ] CA31, CA32 vérifié
+- [x] CA31, CA32 vérifié
+  Joué le 2026-11-27 avec `GROQ_BASE_URL=http://localhost:5999` sur un 2e serveur (port 3001) : `200`, `text/event-stream`, 1 seul événement `LLM_UNAVAILABLE`, flux fermé en moins d'1 s.
 
 ---
 
@@ -387,4 +395,5 @@ Lecture de la base : la table du standup est supposée s'appeler `standup` (`@@m
 - Étape 1 : `401` sur les 3, réponse immédiate, aucun `Content-Type: text/event-stream`, aucun `data:`. Le contrat ne définit aucun code `ApiError` pour l'absence de session, et `requireSession` renvoie aujourd'hui un corps vide : le corps exact est à confirmer (voir le point remonté avec ce fichier). Un `200` signifie que le middleware n'est pas monté sur la route ; un `400 VALIDATION_ERROR` sur la conversation signifie que `validateBody` passe avant `requireSession`.
 - Étape 2 : `200`.
 
-- [ ] Sans session, 401 vérifié
+- [x] Sans session, 401 vérifié
+  Joué le 2026-11-27 : `401` sur les 3 routes sans cookie, corps vide, pas de flux ; `200` avec le cookie.

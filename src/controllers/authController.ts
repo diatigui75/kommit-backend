@@ -3,7 +3,8 @@ import type { ApiError } from '@/types/apiContract.js'
 import type { SignupBody } from '@/services/auth/signupValidation/signupValidation.js'
 import type { SigninBody } from '@/services/auth/signinValidation.js'
 import { type AuthOutcome, readSession, signIn, signOut, signUp } from '@/services/auth/authService/authService.js'
-import { authRepository } from '@/repositories/authRepository.js'
+import { authRepository, getSessionFromHeaders } from '@/repositories/authRepository.js'
+import { createRequireSession } from '@/middlewares/requireSession/requireSession.js'
 
 const httpStatusOf: Partial<Record<ApiError['code'], number>> = {
   VALIDATION_ERROR: 400,
@@ -37,3 +38,5 @@ export const postSignOut = async (req: Request, res: Response) => {
 export const getSession = async (req: Request, res: Response) => {
   reply(res, await readSession(authRepository, req.headers))
 }
+
+export const requireSession = createRequireSession(getSessionFromHeaders)
