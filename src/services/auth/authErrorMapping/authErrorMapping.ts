@@ -20,6 +20,8 @@ const INTERNAL_ERROR: ApiError = {
 const betterAuthErrors = new Map<string, ApiError>([
   ['USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL', EMAIL_ALREADY_EXISTS],
   ['INVALID_EMAIL_OR_PASSWORD', INVALID_CREDENTIALS],
+  // Levé par le signin de Better Auth sur un email mal formé : même réponse qu'un mauvais mot de passe (RM13).
+  ['INVALID_EMAIL', INVALID_CREDENTIALS],
 ])
 
 const isObject = (value: unknown): value is Record<string, unknown> =>
