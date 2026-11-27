@@ -80,6 +80,7 @@ kommit-backend/
 │       └── apiContract.ts # contrat de l'API, copie du front
 ├── testing/
 │   ├── inventaire-KOM-06.md # classement des règles de KOM-06
+│   ├── inventaire-KOM-18.md # classement des règles de KOM-18
 │   └── smokes-KOM-06.md     # scénarios de test manuels de KOM-06
 ├── .env.example           # modèle des variables d'environnement
 ├── .gitignore
