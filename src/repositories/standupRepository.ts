@@ -29,4 +29,6 @@ export const standupRepository: StandupRepository = {
         update: summary,
       }),
     ),
+
+  findInWindow: async () => [],
 }
