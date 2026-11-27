@@ -1,12 +1,18 @@
 import { z } from 'zod'
 import type { ApiError } from '@/types/apiContract.js'
-import { emailSchema, PASSWORD_MAX_LENGTH } from '@/services/auth/signupValidation/signupValidation.js'
+import { PASSWORD_MAX_LENGTH } from '@/services/auth/signupValidation/signupValidation.js'
 
 // Better Auth ne retire pas les espaces de l'email au signin : sans cette normalisation,
 // ' MARC@x.com ' serait refusé au lieu de connecter marc@x.com (RM21).
+// Pas de contrôle de format ici : un email mal formé doit répondre INVALID_CREDENTIALS comme un mauvais
+// mot de passe (RM13). Better Auth le refuse lui-même en INVALID_EMAIL, que le mapping traduit.
 const signinSchema = z.object(
   {
-    email: emailSchema,
+    email: z
+      .string({ error: "L'email est requis." })
+      .trim()
+      .toLowerCase()
+      .min(1, { error: "L'email est requis." }),
     password: z
       .string({ error: 'Le mot de passe est requis.' })
       .min(1, { error: 'Le mot de passe est requis.' })

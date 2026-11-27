@@ -49,6 +49,15 @@ describe('KOM-06 · ré-emballage des erreurs Better Auth et Prisma en ApiError'
         })
       })
 
+      it('ré-emballe l’erreur Better Auth « email invalide » du signin en INVALID_CREDENTIALS', () => {
+        const invalidEmailError = new APIError('BAD_REQUEST', { code: 'INVALID_EMAIL', message: 'Invalid email' })
+
+        expect(toAuthApiError(invalidEmailError)).toEqual({
+          code: 'INVALID_CREDENTIALS',
+          message: 'Email ou mot de passe incorrect.',
+        })
+      })
+
       it('ne renvoie pas le message anglais brut de Better Auth', () => {
         const invalidCredentialsError = new APIError('UNAUTHORIZED', {
           code: 'INVALID_EMAIL_OR_PASSWORD',
