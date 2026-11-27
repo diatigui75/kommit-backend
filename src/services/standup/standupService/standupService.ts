@@ -33,14 +33,27 @@ export const saveStandup = (
   now: Date,
 ): Promise<Standup> => repository.upsertForDay(userId, parisDay(now), summary)
 
-export const getCalendrier = async (
-  _repository: StandupRepository,
-  _userId: string,
-  _query: GetCalendrierQuery,
-): Promise<GetCalendrierResponse> => null as unknown as GetCalendrierResponse
+const STANDUP_NOT_FOUND: ApiError = {
+  code: 'STANDUP_NOT_FOUND',
+  message: "Aucun standup n'a été renseigné ce jour-là.",
+}
 
+// Le calendrier ne transporte que les jours, et count porte sur la fenêtre demandée (CA11, CA12).
+export const getCalendrier = async (
+  repository: StandupRepository,
+  userId: string,
+  { from, to }: GetCalendrierQuery,
+): Promise<GetCalendrierResponse> => {
+  const jours = (await repository.findInWindow(userId, from, to)).map((standup) => standup.jour)
+  return { count: jours.length, jours }
+}
+
+// Le jour d'un autre utilisateur répond exactement comme un jour vide : rien ne trahit son existence (CA38, CA45).
 export const getStandupOfDay = async (
-  _repository: StandupRepository,
-  _userId: string,
-  _jour: Jour,
-): Promise<StandupOfDayOutcome> => null as unknown as StandupOfDayOutcome
+  repository: StandupRepository,
+  userId: string,
+  jour: Jour,
+): Promise<StandupOfDayOutcome> => {
+  const standup = await repository.findByUserAndDay(userId, jour)
+  return standup ? { success: true, data: standup } : { success: false, error: { ...STANDUP_NOT_FOUND } }
+}

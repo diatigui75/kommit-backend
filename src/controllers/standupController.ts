@@ -1,6 +1,11 @@
 import type { Request, Response } from 'express'
 import type { PostConversationBody, PostStandupBody, SessionUser } from '@/types/apiContract.js'
-import { getTodayStandup, saveStandup } from '@/services/standup/standupService/standupService.js'
+import {
+  getCalendrier,
+  getStandupOfDay,
+  getTodayStandup,
+  saveStandup,
+} from '@/services/standup/standupService/standupService.js'
 import { streamConversation } from '@/services/standup/standupConversation/standupConversation.js'
 import { standupRepository } from '@/repositories/standupRepository.js'
 import { groqLlmClient } from '@/repositories/groqClient.js'
@@ -9,6 +14,24 @@ const sessionUserIdOf = (res: Response) => (res.locals.sessionUser as SessionUse
 
 export const getToday = async (_req: Request, res: Response) => {
   res.json(await getTodayStandup(standupRepository, sessionUserIdOf(res), new Date()))
+}
+
+// Sans validation des dates (le ticket ne la prévoit pas) : une date mal formée finit en 500 INTERNAL_ERROR.
+export const getStandups = async (req: Request, res: Response) => {
+  const from = String(req.query.from)
+  const to = String(req.query.to)
+  res.json(await getCalendrier(standupRepository, sessionUserIdOf(res), { from, to }))
+}
+
+export const getStandup = async (req: Request, res: Response) => {
+  const outcome = await getStandupOfDay(standupRepository, sessionUserIdOf(res), String(req.params.jour))
+
+  if (!outcome.success) {
+    res.status(404).json(outcome.error)
+    return
+  }
+
+  res.json(outcome.data)
 }
 
 export const postStandup = async (_req: Request, res: Response) => {

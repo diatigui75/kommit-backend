@@ -104,7 +104,8 @@ signup a
   - Un 404 `Route introuvable` : `GET /` n'est pas déclaré dans `standupRoutes.ts`.
 - Étape 3 : `0`. Toute autre valeur signifie que les résumés partent avec le calendrier.
 
-- [ ] CA11, CA12 vérifié
+- [x] CA11, CA12 vérifié
+  Joué le 2026-11-27 : le jour apparaît sur `from`, sur `to` et sur les 2 (`count` 1), disparaît la veille et le lendemain (`count` 0). Aucun `summary` dans la réponse.
 
 ---
 
@@ -135,7 +136,8 @@ signup a
 - Étape 1 : `200`, un `Standup` avec `jour` = `$TODAY` et `summary` = `$SUMMARY_A`, puis `identiques`. Un `STANDUP_NOT_FOUND` signifie que le `:jour` de l'URL est converti en une autre date que celle stockée (décalage d'un jour).
 - Étape 2 : `200`, `{"done":true,"standup":{…}}` avec le même `id`. Un `STANDUP_NOT_FOUND` ou un `500 INTERNAL_ERROR` signifie que `/:jour` est déclaré avant `/today` et traite `today` comme une date.
 
-- [ ] CA14 vérifié
+- [x] CA14 vérifié
+  Joué le 2026-11-27 : `GET /standups/2026-11-27` rend `200` et le même `Standup` que le POST ; `GET /standups/today` répond toujours `{ done, standup }`.
 
 ---
 
@@ -172,7 +174,8 @@ signup a
 - Étape 1 : 2 signups en 2xx, `POST /standups (b) : 200`.
 - Étape 2 : `a` et `b` répondent `{"count":1,"jours":["<TODAY>"]}`, `c` répond `{"count":0,"jours":[]}`. Un `count` à 2 (ou `$TODAY` listé 2 fois) chez `a` ou `b`, ou un `$TODAY` chez `c`, signifie que la requête ne filtre pas sur le `userId` de la session.
 
-- [ ] CA38 vérifié
+- [x] CA38 vérifié
+  Joué le 2026-11-27 : `a` et `b` ont chacun `count` 1, `c` a `{"count":0,"jours":[]}`.
 
 ---
 
@@ -202,7 +205,8 @@ signup a
 - Étape 1 : les 2 réponses ont la forme `{"code":"STANDUP_NOT_FOUND","message":"…"}`, avec le même statut. Le contrat ne fixe pas le statut HTTP : `404` est attendu (voir le point remonté avec ce fichier). Un `200` avec un `Standup` sur `$TODAY` signifie que la lecture ignore le `userId` et renvoie le standup d'un autre.
 - Étape 2 : `identiques`, puis `0`. `DIFFÉRENTS` signifie qu'un appelant peut distinguer un jour où quelqu'un d'autre a fait son standup. Si la seule différence est la date reprise dans `message`, rien ne fuit, mais le message doit rester le même pour tous les jours pour que la réponse soit « le même `STANDUP_NOT_FOUND` » du ticket.
 
-- [ ] CA38, CA45 vérifié
+- [x] CA38, CA45 vérifié
+  Joué le 2026-11-27 : jour d'autrui et jour vide répondent tous les 2 `404` avec un corps `STANDUP_NOT_FOUND` identique, sans rien du récap de `b`.
 
 ---
 
@@ -247,4 +251,5 @@ signup a
 - Étape 1 : `500` et `{"code":"INTERNAL_ERROR","message":"Une erreur interne est survenue. Réessaie dans un instant."}` sur les 2 appels (ou `400 VALIDATION_ERROR`, voir l'encadré). Un `STANDUP_NOT_FOUND` ou un `{"count":0,"jours":[]}` signifie que l'erreur est avalée et convertie en « aucun standup », exactement ce que CA46 interdit. Une page HTML ou un corps vide signifie que l'erreur ne passe pas par `errorHandler`.
 - Étape 2 : `500` et le même `INTERNAL_ERROR` sur les 3 appels, `/today` compris (il sert de témoin : l'erreur vient de `requireSession`). Un `401` signifie que Better Auth transforme la base injoignable en « pas de session » : le front afficherait un état déconnecté au lieu d'un échec de chargement. Si curl tourne jusqu'aux 30 s, la connexion à la base n'a pas de timeout.
 
-- [ ] CA43, CA46 vérifié
+- [x] CA43, CA46 vérifié
+  Joué le 2026-11-27 : dates refusées par Prisma → `500 INTERNAL_ERROR` sur les 2 routes ; base injoignable (2e serveur, port 3001) → `500 INTERNAL_ERROR` sur les 3 routes, aucun `401`.

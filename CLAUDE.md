@@ -47,7 +47,7 @@ kommit-backend/
 │   │   ├── dbHealthRoutes.ts
 │   │   ├── healthRoutes.ts
 │   │   ├── rootRoutes.ts
-│   │   └── standupRoutes.ts # /standups : today, validation, conversation SSE (session requise)
+│   │   └── standupRoutes.ts # /standups : calendrier, jour, today, validation, conversation SSE (session requise)
 │   ├── repositories/
 │   │   ├── generated/     # client Prisma généré (ignoré par git)
 │   │   ├── authClient.ts  # instance unique de Better Auth
@@ -55,13 +55,13 @@ kommit-backend/
 │   │   ├── dbHealthRepository.ts
 │   │   ├── groqClient.ts  # client Groq réel, implémente le port LlmClient
 │   │   ├── prismaClient.ts # instance unique du client Prisma
-│   │   └── standupRepository.ts # upsert du standup sur UNIQUE (userId, jour)
+│   │   └── standupRepository.ts # upsert du standup sur UNIQUE (userId, jour), lecture d'une fenêtre
 │   ├── controllers/
 │   │   ├── authController.ts
 │   │   ├── dbHealthController.ts
 │   │   ├── healthController.ts
 │   │   ├── rootController.ts
-│   │   └── standupController.ts # état du jour, validation, flux SSE
+│   │   └── standupController.ts # calendrier, jour, état du jour, validation, flux SSE
 │   ├── services/
 │   │   ├── auth/
 │   │   │   ├── authService/           # orchestrateur : appels d'auth + ré-emballage des erreurs
@@ -109,7 +109,6 @@ kommit-backend/
 ├── testing/
 │   ├── inventaire-KOM-06.md # classement des règles de KOM-06
 │   ├── inventaire-KOM-18.md # classement des règles de KOM-18
-│   ├── inventaire-KOM-21.md # classement des règles de KOM-21
 │   ├── inventaire-KOM-21.md # classement des règles de KOM-21
 │   ├── smokes-KOM-06.md     # scénarios de test manuels de KOM-06
 │   ├── smokes-KOM-18.md     # scénarios de test manuels de KOM-18

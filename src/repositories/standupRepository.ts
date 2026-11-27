@@ -30,5 +30,12 @@ export const standupRepository: StandupRepository = {
       }),
     ),
 
-  findInWindow: async () => [],
+  // Bornes incluses, triées par jour : le front construit la grille dans cet ordre.
+  findInWindow: async (userId, from, to) =>
+    (
+      await prisma.standup.findMany({
+        where: { userId, jour: { gte: toDate(from), lte: toDate(to) } },
+        orderBy: { jour: 'asc' },
+      })
+    ).map(toStandup),
 }
