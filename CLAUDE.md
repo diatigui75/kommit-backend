@@ -74,14 +74,39 @@ kommit-backend/
 │   │   │   └── dbHealthService.ts
 │   │   ├── health/
 │   │   │   └── healthService.ts
-│   │   └── root/
-│   │       └── rootService.ts
+│   │   ├── root/
+│   │   │   └── rootService.ts
+│   │   └── standup/
+│   │       ├── standupPrompts.ts      # prompt système, instruction de récap et marqueur de fin (fournis par KOM-18)
+│   │       ├── llmClient.ts           # port du LLM, formes reprises de groq-sdk
+│   │       ├── standupService/        # orchestrateur : état du jour, enregistrement du standup
+│   │       │   ├── standupService.ts
+│   │       │   └── standupService.test.ts
+│   │       ├── standupDay/            # jour civil en Europe/Paris
+│   │       │   ├── standupDay.ts
+│   │       │   └── standupDay.test.ts
+│   │       ├── standupValidation/     # validation du corps de POST /standups (schéma Zod)
+│   │       │   ├── standupValidation.ts
+│   │       │   └── standupValidation.test.ts
+│   │       ├── conversationValidation/ # validation du corps de POST /standups/conversation
+│   │       │   ├── conversationValidation.ts
+│   │       │   └── conversationValidation.test.ts
+│   │       ├── standupConversation/   # flux LLM → événements SSE, retrait du marqueur
+│   │       │   ├── standupConversation.ts
+│   │       │   └── standupConversation.test.ts
+│   │       ├── summaryGeneration/     # récap JSON du LLM, retry unique
+│   │       │   ├── summaryGeneration.ts
+│   │       │   └── summaryGeneration.test.ts
+│   │       └── llmErrorMapping/       # erreurs Groq → ApiError
+│   │           ├── llmErrorMapping.ts
+│   │           └── llmErrorMapping.test.ts
 │   └── types/
 │       └── apiContract.ts # contrat de l'API, copie du front
 ├── testing/
 │   ├── inventaire-KOM-06.md # classement des règles de KOM-06
 │   ├── inventaire-KOM-18.md # classement des règles de KOM-18
-│   └── smokes-KOM-06.md     # scénarios de test manuels de KOM-06
+│   ├── smokes-KOM-06.md     # scénarios de test manuels de KOM-06
+│   └── smokes-KOM-18.md     # scénarios de test manuels de KOM-18
 ├── .env.example           # modèle des variables d'environnement
 ├── .gitignore
 ├── .nvmrc                 # version de Node (CI et Render)
