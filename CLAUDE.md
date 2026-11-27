@@ -74,8 +74,10 @@ kommit-backend/
 │   │   │   └── dbHealthService.ts
 │   │   ├── health/
 │   │   │   └── healthService.ts
-│   │   └── root/
-│   │       └── rootService.ts
+│   │   ├── root/
+│   │   │   └── rootService.ts
+│   │   └── standup/
+│   │       └── standupPrompts.ts      # prompt système et instruction de récap du LLM (fournis par KOM-18)
 │   └── types/
 │       └── apiContract.ts # contrat de l'API, copie du front
 ├── testing/
