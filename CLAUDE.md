@@ -19,7 +19,7 @@ kommit-backend/
 │   └── settings.json      # branchement des hooks
 ├── .github/
 │   └── workflows/
-│       └── ci.yml         # CI : lint, build, tests sur les PR vers dev
+│       └── ci.yml         # CI : lint, typecheck, build, tests sur les PR vers dev
 ├── .vscode/
 │   └── settings.json
 ├── docs/
@@ -131,6 +131,7 @@ kommit-backend/
 ├── pnpm-workspace.yaml    # scripts d'installation autorisés
 ├── prisma.config.ts       # config de la CLI Prisma
 ├── render.yaml            # Blueprint Render du serveur backend de DEV
+├── tsconfig.build.json    # config du build : tsconfig.json sans les tests
 ├── tsconfig.json
 └── vitest.config.ts       # config Vitest (alias @/ via vite-tsconfig-paths)
 ```
