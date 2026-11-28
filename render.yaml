@@ -19,3 +19,28 @@ services:
         value: https://kommit-backend-diatigui-dev.onrender.com
       - key: FRONTEND_ORIGINS
         value: http://localhost:5173,https://kommit-frontend-diatigui-dev.vercel.app
+
+  - type: web
+    name: kommit-backend-diatigui-prod
+    runtime: node
+    plan: free
+    branch: main
+    autoDeploy: true
+    buildCommand: pnpm install --frozen-lockfile && pnpm build
+    startCommand: pnpm start
+    healthCheckPath: /health
+    domains:
+      - api.kommitapp.com
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: BETTER_AUTH_SECRET
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: BETTER_AUTH_URL
+        value: https://api.kommitapp.com
+      - key: FRONTEND_ORIGINS
+        value: https://www.kommitapp.com
+      - key: COOKIE_SAME_SITE
+        value: lax

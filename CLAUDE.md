@@ -19,7 +19,7 @@ kommit-backend/
 │   └── settings.json      # branchement des hooks
 ├── .github/
 │   └── workflows/
-│       └── ci.yml         # CI : lint, typecheck, build, tests sur les PR vers dev
+│       └── ci.yml         # CI : lint, typecheck, build, tests sur les PR vers dev et main
 ├── .vscode/
 │   └── settings.json
 ├── docs/
@@ -34,6 +34,9 @@ kommit-backend/
 │   ├── app.ts             # assemblage de l'app Express
 │   ├── config/
 │   │   ├── appConfig.ts   # port, nom, version, URL de la base, config Better Auth, origins du front
+│   │   ├── cookieSameSite/ # lecture de COOKIE_SAME_SITE (none par défaut)
+│   │   │   ├── cookieSameSite.ts
+│   │   │   └── cookieSameSite.test.ts
 │   │   └── frontendOrigins/ # lecture de FRONTEND_ORIGINS, repli sur localhost
 │   │       ├── frontendOrigins.ts
 │   │       └── frontendOrigins.test.ts
@@ -135,7 +138,7 @@ kommit-backend/
 ├── pnpm-lock.yaml
 ├── pnpm-workspace.yaml    # scripts d'installation autorisés
 ├── prisma.config.ts       # config de la CLI Prisma
-├── render.yaml            # Blueprint Render du serveur backend de DEV
+├── render.yaml            # Blueprint Render : serveur backend de DEV (dev) et de PROD (main)
 ├── tsconfig.build.json    # config du build : tsconfig.json sans les tests
 ├── tsconfig.json
 └── vitest.config.ts       # config Vitest (alias @/ via vite-tsconfig-paths)

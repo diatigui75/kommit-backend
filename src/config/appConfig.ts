@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs'
+import { parseCookieSameSite } from '@/config/cookieSameSite/cookieSameSite.js'
 import { parseFrontendOrigins } from '@/config/frontendOrigins/frontendOrigins.js'
 
 type PackageJson = {
@@ -42,6 +43,8 @@ export const appConfig = {
   betterAuthSecret,
   betterAuthUrl,
   frontendOrigins,
+  // N'agit qu'en https. Lax quand le front et l'API partagent le même site (www et api.kommitapp.com), None sinon.
+  cookieSameSite: parseCookieSameSite(process.env.COOKIE_SAME_SITE),
   // Optionnelle au démarrage : sans elle, seul le standup échoue (LLM_UNAVAILABLE), le reste de l'API tourne.
   groqApiKey: process.env.GROQ_API_KEY,
   // llama-3.3-70b-versatile n'est plus accessible sans contrat (« Contact Sales » sur console.groq.com, 2026-11-27).
