@@ -61,7 +61,7 @@ Plan gratuit Render : si le service s'est endormi, la 1re requête peut mettre j
 - Étape 3 : « Deploy live » pour ce même commit.
   - « Deploy failed » : ouvrir les logs du déploiement. Un échec au build vise `pnpm install --frozen-lockfile && pnpm build`, un échec après le build vise le démarrage ou le health check (cf. CA2).
 
-- [ ] CA1 vérifié
+- [x] CA1 vérifié : merge de la PR #14 sur `dev` à 12:26:39 UTC. Le service Render avait 310 s d'uptime à 12:33:00, donc il a redémarré vers 12:27:50 sur ce merge. Dashboard Render non consulté.
 
 ---
 
@@ -91,7 +91,7 @@ Plan gratuit Render : si le service s'est endormi, la 1re requête peut mettre j
   - Une variable `PORT` : la supprimer, c'est contraire au ticket (le health check tombe si elle diffère du port attendu par Render).
 - Étape 3 : le serveur annonce l'écoute sur le port fourni par Render (`10000` par défaut), et le déploiement est passé « Live » sans « Health check failed ».
 
-- [ ] CA2 vérifié
+- [x] CA2 vérifié : `GET /health` → `HTTP/2 200`, `{"status":"ok"}`. La variable `PORT` absente de Render n'a pas été vérifiée dans le dashboard.
 
 ### 2. Accès et authentification depuis un autre domaine
 
@@ -140,7 +140,7 @@ Plan gratuit Render : si le service s'est endormi, la 1re requête peut mettre j
   - Une ligne `access-control-allow-origin: *` ou `https://evil.example` : la whitelist n'est pas appliquée.
 - Étape 4 : `HTTP/2 204`, `access-control-allow-origin` égal à l'URL Vercel, `access-control-allow-credentials: true`, `access-control-allow-methods` qui contient `POST`.
 
-- [ ] CA3 (complément smoke) vérifié
+- [x] CA3 (complément smoke) vérifié en local avec `CORS_ORIGINS` et sur Render avec l'ancien nom `FRONTEND_ORIGINS` : Vercel et localhost:5173 acceptés avec credentials, `evil.example` sans `Access-Control-Allow-Origin`, preflight `204`. À rejouer sur Render après le merge pour valider le renommage.
 
 ---
 
@@ -186,7 +186,7 @@ Plan gratuit Render : si le service s'est endormi, la 1re requête peut mettre j
 - Étape 3 : `HTTP/2 200`, corps de forme `GetTodayResponse` : `{"done":false,"standup":null}` pour un compte neuf.
 - Étape 4 : `401`, corps vide (`requireSession`).
 
-- [ ] CA4 (curl) vérifié
+- [x] CA4 (curl) vérifié sur Render : signup `200`, sign-in `200` avec `__Secure-better-auth.session_token` en `HttpOnly; Secure; SameSite=None`, `GET /standups/today` → `200 {"done":false,"standup":null}` avec cookie, `401` sans.
 
 ---
 
@@ -212,4 +212,4 @@ Plan gratuit Render : si le service s'est endormi, la 1re requête peut mettre j
   - Cookie absent, ou l'appel de sign-in marqué d'un triangle jaune dans **Network** (onglet **Cookies** de la requête : « This Set-Cookie was blocked… ») : le navigateur a refusé le cookie, lire la raison affichée.
 - Étape 3 : après rechargement, toujours connecté. La requête porte un en-tête `Cookie` avec le `session_token` et répond `200`, pas `401`.
 
-- [ ] CA4 (navigateur) vérifié
+- [ ] CA4 (navigateur) vérifié : non joué, il demande un navigateur.

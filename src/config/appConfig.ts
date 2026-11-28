@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs'
+import { parseCorsOrigins } from '@/config/corsOrigins/corsOrigins.js'
 
 type PackageJson = {
   name: string
@@ -24,17 +25,7 @@ if (!betterAuthSecret) {
 
 const port = Number(process.env.PORT ?? 3000)
 
-// Par défaut, les ports de développement de Vite : il prend le port suivant quand le précédent est déjà occupé.
-const devFrontendOrigins = [
-  'http://localhost:5173',
-  'http://localhost:5174',
-  'http://localhost:5175',
-  'http://localhost:5176',
-]
-
-const frontendOrigins = process.env.FRONTEND_ORIGINS
-  ? process.env.FRONTEND_ORIGINS.split(',').map((origin) => origin.trim()).filter(Boolean)
-  : devFrontendOrigins
+const frontendOrigins = parseCorsOrigins(process.env.CORS_ORIGINS)
 
 export const appConfig = {
   port,
