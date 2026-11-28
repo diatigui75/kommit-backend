@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs'
+import { parseFrontendOrigins } from '@/config/frontendOrigins/frontendOrigins.js'
 
 type PackageJson = {
   name: string
@@ -24,17 +25,14 @@ if (!betterAuthSecret) {
 
 const port = Number(process.env.PORT ?? 3000)
 
-// Par défaut, les ports de développement de Vite : il prend le port suivant quand le précédent est déjà occupé.
-const devFrontendOrigins = [
-  'http://localhost:5173',
-  'http://localhost:5174',
-  'http://localhost:5175',
-  'http://localhost:5176',
-]
+const betterAuthUrl = process.env.BETTER_AUTH_URL ?? `http://localhost:${port}`
 
-const frontendOrigins = process.env.FRONTEND_ORIGINS
-  ? process.env.FRONTEND_ORIGINS.split(',').map((origin) => origin.trim()).filter(Boolean)
-  : devFrontendOrigins
+// En ligne (https), le repli sur localhost refuserait le front sans signal : /health resterait vert.
+if (betterAuthUrl.startsWith('https://') && !process.env.FRONTEND_ORIGINS?.replaceAll(',', '').trim()) {
+  throw new Error('FRONTEND_ORIGINS manquante : renseigne les origins du front dans les variables du service.')
+}
+
+const frontendOrigins = parseFrontendOrigins(process.env.FRONTEND_ORIGINS)
 
 export const appConfig = {
   port,
@@ -42,7 +40,7 @@ export const appConfig = {
   version: packageJson.version,
   databaseUrl,
   betterAuthSecret,
-  betterAuthUrl: process.env.BETTER_AUTH_URL ?? `http://localhost:${port}`,
+  betterAuthUrl,
   frontendOrigins,
   // Optionnelle au démarrage : sans elle, seul le standup échoue (LLM_UNAVAILABLE), le reste de l'API tourne.
   groqApiKey: process.env.GROQ_API_KEY,

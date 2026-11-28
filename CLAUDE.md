@@ -33,7 +33,10 @@ kommit-backend/
 │   ├── index.ts           # démarrage du serveur
 │   ├── app.ts             # assemblage de l'app Express
 │   ├── config/
-│   │   └── appConfig.ts   # port, nom, version, URL de la base, config Better Auth, origins du front
+│   │   ├── appConfig.ts   # port, nom, version, URL de la base, config Better Auth, origins du front
+│   │   └── frontendOrigins/ # lecture de FRONTEND_ORIGINS, repli sur localhost
+│   │       ├── frontendOrigins.ts
+│   │       └── frontendOrigins.test.ts
 │   ├── middlewares/
 │   │   ├── authRateLimit.ts  # 5 essais ratés par minute sur sign-in et sign-up → 429
 │   │   ├── corsMiddleware.ts # whitelist des origins CORS, avec credentials
@@ -117,10 +120,12 @@ kommit-backend/
 │   ├── inventaire-KOM-18.md # classement des règles de KOM-18
 │   ├── inventaire-KOM-21.md # classement des règles de KOM-21
 │   ├── inventaire-KOM-25.md # classement des règles de KOM-25
+│   ├── inventaire-KOM-27.md # classement des règles de KOM-27
 │   ├── smokes-KOM-06.md     # scénarios de test manuels de KOM-06
 │   ├── smokes-KOM-18.md     # scénarios de test manuels de KOM-18
 │   ├── smokes-KOM-21.md     # scénarios de test manuels de KOM-21
-│   └── smokes-KOM-25.md     # scénarios de test manuels de KOM-25
+│   ├── smokes-KOM-25.md     # scénarios de test manuels de KOM-25
+│   └── smokes-KOM-27.md     # scénarios de test manuels de KOM-27
 ├── .env.example           # modèle des variables d'environnement
 ├── .gitignore
 ├── .nvmrc                 # version de Node (CI et Render)
