@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express'
-import type { PostConversationBody, PostStandupBody, SessionUser } from '@/types/apiContract.js'
+import type { GetCalendrierQuery, Jour, PostConversationBody, PostStandupBody, SessionUser } from '@/types/apiContract.js'
 import {
   getCalendrier,
   getStandupOfDay,
@@ -16,15 +16,14 @@ export const getToday = async (_req: Request, res: Response) => {
   res.json(await getTodayStandup(standupRepository, sessionUserIdOf(res), new Date()))
 }
 
-// Sans validation des dates (le ticket ne la prévoit pas) : une date mal formée finit en 500 INTERNAL_ERROR.
-export const getStandups = async (req: Request, res: Response) => {
-  const from = String(req.query.from)
-  const to = String(req.query.to)
-  res.json(await getCalendrier(standupRepository, sessionUserIdOf(res), { from, to }))
+export const getStandups = async (_req: Request, res: Response) => {
+  const query = res.locals.query as GetCalendrierQuery
+  res.json(await getCalendrier(standupRepository, sessionUserIdOf(res), query))
 }
 
-export const getStandup = async (req: Request, res: Response) => {
-  const outcome = await getStandupOfDay(standupRepository, sessionUserIdOf(res), String(req.params.jour))
+export const getStandup = async (_req: Request, res: Response) => {
+  const { jour } = res.locals.params as { jour: Jour }
+  const outcome = await getStandupOfDay(standupRepository, sessionUserIdOf(res), jour)
 
   if (!outcome.success) {
     res.status(404).json(outcome.error)

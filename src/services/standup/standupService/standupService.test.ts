@@ -187,14 +187,6 @@ describe('KOM-21 · 1. Lecture du calendrier et du résumé', () => {
 
       expect(calendrier).toEqual({ count: 1, jours: ['2026-07-10'] })
     })
-
-    it('ne transporte aucun résumé : chaque jour est une simple chaîne', async () => {
-      const repository = inMemoryStandupRepository([{ userId, standup: standupOf('2026-07-15') }])
-
-      const calendrier = await getCalendrier(repository, userId, window)
-
-      expect(calendrier).toEqual({ count: 1, jours: ['2026-07-15'] })
-    })
   })
 
   describe('CA11 · compteur de la fenêtre', () => {

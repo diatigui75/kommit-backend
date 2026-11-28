@@ -252,4 +252,4 @@ signup a
 - Étape 2 : `500` et le même `INTERNAL_ERROR` sur les 3 appels, `/today` compris (il sert de témoin : l'erreur vient de `requireSession`). Un `401` signifie que Better Auth transforme la base injoignable en « pas de session » : le front afficherait un état déconnecté au lieu d'un échec de chargement. Si curl tourne jusqu'aux 30 s, la connexion à la base n'a pas de timeout.
 
 - [x] CA43, CA46 vérifié
-  Joué le 2026-11-27 : dates refusées par Prisma → `500 INTERNAL_ERROR` sur les 2 routes ; base injoignable (2e serveur, port 3001) → `500 INTERNAL_ERROR` sur les 3 routes, aucun `401`.
+  Joué le 2026-11-27 : dates refusées par Prisma → `500 INTERNAL_ERROR` sur les 2 routes. Depuis l'ajout de la validation des dates (2026-11-28), l'étape 1 répond `400 VALIDATION_ERROR`, comme prévu par l'encadré ; base injoignable (2e serveur, port 3001) → `500 INTERNAL_ERROR` sur les 3 routes, aucun `401`.

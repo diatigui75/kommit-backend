@@ -38,6 +38,7 @@ kommit-backend/
 │   │   ├── errorHandler.ts   # erreur imprévue → 500 INTERNAL_ERROR
 │   │   ├── notFound.ts
 │   │   ├── validateBody.ts   # validation du corps → 400 ou res.locals.body
+│   │   ├── validateInput.ts  # validation de la query et des paramètres → 400 ou res.locals.query / params
 │   │   └── requireSession/
 │   │       ├── requireSession.ts      # pas de session → 401, sinon res.locals.sessionUser
 │   │       └── requireSession.test.ts
@@ -92,6 +93,9 @@ kommit-backend/
 │   │       ├── standupValidation/     # validation du corps de POST /standups (schéma Zod)
 │   │       │   ├── standupValidation.ts
 │   │       │   └── standupValidation.test.ts
+│   │       ├── calendrierValidation/  # validation des dates de GET /standups et /standups/:jour
+│   │       │   ├── calendrierValidation.ts
+│   │       │   └── calendrierValidation.test.ts
 │   │       ├── conversationValidation/ # validation du corps de POST /standups/conversation
 │   │       │   ├── conversationValidation.ts
 │   │       │   └── conversationValidation.test.ts
