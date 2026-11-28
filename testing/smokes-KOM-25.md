@@ -101,7 +101,7 @@ git switch "$FROM"
   - Aucune ligne, ou `gh pr checks` répond « no checks reported » après plusieurs minutes : le workflow ne se déclenche pas sur une PR vers `dev` (fichier absent de la branche, ou `branches` mal écrit).
   - Une ligne `push` : le workflow se déclenche aussi sur les push, hors périmètre du ticket.
 
-- [ ] CA1 vérifié
+- [x] CA1 vérifié : PR #14 ouverte → run 46144075309 (`pull_request`), puis 2e run après le push de ce commit. Aucun run `push`.
 
 ---
 
@@ -148,7 +148,7 @@ Si `reviews` n'est pas `null` à l'étape 1, une review requise suffit à donner
 
 On ne tente pas `gh pr merge --admin` : si la protection est mal réglée, la PR de test partirait réellement dans `dev`.
 
-- [ ] CA2 vérifié
+- [x] CA2 vérifié : en partie. Protection de `dev` lue par l'API (check `ci` requis, `enforce_admins` activé). PR #14 en `BLOCKED` pendant le check, `CLEAN` une fois vert. Le scénario de PR rouge n'a pas été joué sur GitHub.
 
 ### 2. Installation des dépendances
 
@@ -191,7 +191,7 @@ On ne tente pas `gh pr merge --admin` : si la protection est mal réglée, la PR
   - Install en `success` : la CI n'installe pas en `--frozen-lockfile`, elle réécrit le lockfile en silence.
 - Étape 3 : aucune ligne, puis `lignes trouvées : 1` (le `1` de `grep` veut dire « rien trouvé »). Une ligne « Ignored build scripts » signifie que pnpm sur le runner ne lit pas `allowBuilds` : le client Prisma n'est pas généré par le `postinstall`.
 
-- [ ] CA3 vérifié
+- [x] CA3 vérifié : run GitHub 45822963902 (branche `ajouter-dayjs`) en échec à `pnpm install --frozen-lockfile`, avec Lint, Build et Tests en `skipped`. En local : `ERR_PNPM_OUTDATED_LOCKFILE`. Sur la PR #14, l'install passe et `prisma generate` tourne en postinstall.
 
 ### 3. Vérifications
 
@@ -223,7 +223,7 @@ On ne tente pas `gh pr merge --admin` : si la protection est mal réglée, la PR
 - Le log cite `src/smokeLint.ts` et la règle `no-restricted-imports` (« Imports internes : utilise l'alias @/ »).
   - Échec à `Build` au lieu de `Lint` : l'étape `Lint` n'est pas dans le workflow, ou elle est placée après `Build`.
 
-- [ ] CA4 vérifié
+- [x] CA4 vérifié : en local (worktree jetable) : `pnpm lint` exit 1, `no-restricted-imports`. Pas joué sur GitHub.
 
 ---
 
@@ -261,7 +261,7 @@ On ne tente pas `gh pr merge --admin` : si la protection est mal réglée, la PR
 - Étape 2 : `Lint : success`, `Build : failure`, `Tests : skipped`. Le log contient `src/smokeBuild.ts` et `error TS2322` (string non assignable à number).
 - Étape 3 : au moins 2 lignes `Generated Prisma Client` (le `postinstall` pendant l'install, puis l'étape `Build`) et aucune ligne qui mentionne `DATABASE_URL`. Une erreur sur `DATABASE_URL` signifie que `prisma.config.ts` exige la variable à la génération, et la CI aurait besoin d'une base, contraire au ticket.
 
-- [ ] CA5 vérifié
+- [x] CA5 vérifié : en local : `pnpm build` exit 2, `TS2322`, après `Generated Prisma Client` sans base. Sur la PR #14, Build en `success` sans `DATABASE_URL`.
 
 ---
 
@@ -298,7 +298,7 @@ On ne tente pas `gh pr merge --admin` : si la protection est mal réglée, la PR
   - Job annulé après un long délai (timeout) : Vitest est resté en mode watch.
   - Une erreur de connexion à Postgres : un test unitaire touche une vraie base.
 
-- [ ] CA6 vérifié
+- [x] CA6 vérifié : en local : test cassé → `pnpm test` exit 1 (1 failed). Sur la PR #14, Tests en `success`, 12 fichiers.
 
 ### 4. Résultat
 
@@ -331,4 +331,4 @@ On ne tente pas `gh pr merge --admin` : si la protection est mal réglée, la PR
   - `BEHIND` : la protection exige une branche à jour (`strict`) et `dev` a avancé. Mettre la branche à jour (`gh pr update-branch "$(br saine)"`), attendre le check, relire.
   - `BLOCKED` avec `ci` en `pass` : une autre règle bloque (review requise, cf. `reviews` en CA2). Le blocage de CA2 n'est alors pas attribuable à la CI seule.
 
-- [ ] CA7 vérifié
+- [x] CA7 vérifié : PR #14 : install, Lint, Build et Tests en `success`, check `ci` vert, `mergeStateStatus` à `CLEAN`.
