@@ -17,5 +17,5 @@ services:
         sync: false
       - key: BETTER_AUTH_URL
         value: https://kommit-backend-diatigui-dev.onrender.com
-      - key: CORS_ORIGINS
+      - key: FRONTEND_ORIGINS
         value: http://localhost:5173,https://kommit-frontend-diatigui-dev.vercel.app

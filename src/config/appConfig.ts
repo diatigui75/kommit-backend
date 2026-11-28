@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs'
-import { parseCorsOrigins } from '@/config/corsOrigins/corsOrigins.js'
+import { parseFrontendOrigins } from '@/config/frontendOrigins/frontendOrigins.js'
 
 type PackageJson = {
   name: string
@@ -25,7 +25,14 @@ if (!betterAuthSecret) {
 
 const port = Number(process.env.PORT ?? 3000)
 
-const frontendOrigins = parseCorsOrigins(process.env.CORS_ORIGINS)
+const betterAuthUrl = process.env.BETTER_AUTH_URL ?? `http://localhost:${port}`
+
+// En ligne (https), le repli sur localhost refuserait le front sans signal : /health resterait vert.
+if (betterAuthUrl.startsWith('https://') && !process.env.FRONTEND_ORIGINS?.replaceAll(',', '').trim()) {
+  throw new Error('FRONTEND_ORIGINS manquante : renseigne les origins du front dans les variables du service.')
+}
+
+const frontendOrigins = parseFrontendOrigins(process.env.FRONTEND_ORIGINS)
 
 export const appConfig = {
   port,
@@ -33,7 +40,7 @@ export const appConfig = {
   version: packageJson.version,
   databaseUrl,
   betterAuthSecret,
-  betterAuthUrl: process.env.BETTER_AUTH_URL ?? `http://localhost:${port}`,
+  betterAuthUrl,
   frontendOrigins,
   // Optionnelle au démarrage : sans elle, seul le standup échoue (LLM_UNAVAILABLE), le reste de l'API tourne.
   groqApiKey: process.env.GROQ_API_KEY,

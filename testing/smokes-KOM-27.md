@@ -1,6 +1,6 @@
 # Smokes : KOM-27 « Créer une CD · backend »
 
-> **Écrits avant l'implémentation, à exécuter après.** Ces scénarios se jouent à la main une fois le renommage `FRONTEND_ORIGINS` → `CORS_ORIGINS` mergé sur `dev` et déployé sur Render (cf. `docs/workflow-ticket-backend.md`). Cocher la case d'un scénario quand son résultat attendu est constaté.
+> **Écrits avant l'implémentation, à exécuter après.** Ces scénarios se jouent à la main une fois la lecture de `FRONTEND_ORIGINS` extraite et mergée sur `dev` et déployé sur Render (cf. `docs/workflow-ticket-backend.md`). Cocher la case d'un scénario quand son résultat attendu est constaté.
 
 Source : `testing/inventaire-KOM-27.md` (mêmes sections, même ordre), ticket KOM-27 (page Notion), `render.yaml`, `src/routes/index.ts` et `src/routes/authRoutes.ts` (routes), `src/middlewares/corsMiddleware.ts`, `src/repositories/authClient.ts` (attributs du cookie), `src/middlewares/requireSession/requireSession.ts` (`401` sans corps), contrat `src/types/apiContract.ts`.
 
@@ -87,7 +87,7 @@ Plan gratuit Render : si le service s'est endormi, la 1re requête peut mettre j
 
 - Étape 1 : `HTTP/2 200`, corps JSON `{"status":"ok","uptime":…,"timestamp":"…"}`.
   - `502` ou `503` après plusieurs essais : le process ne tourne pas ou n'écoute pas sur le bon port.
-- Étape 2 : aucune variable `PORT`. Les clés présentes sont `DATABASE_URL`, `BETTER_AUTH_SECRET`, `GROQ_API_KEY`, `BETTER_AUTH_URL` (`https://kommit-backend-diatigui-dev.onrender.com`) et `CORS_ORIGINS`.
+- Étape 2 : aucune variable `PORT`. Les clés présentes sont `DATABASE_URL`, `BETTER_AUTH_SECRET`, `GROQ_API_KEY`, `BETTER_AUTH_URL` (`https://kommit-backend-diatigui-dev.onrender.com`) et `FRONTEND_ORIGINS`.
   - Une variable `PORT` : la supprimer, c'est contraire au ticket (le health check tombe si elle diffère du port attendu par Render).
 - Étape 3 : le serveur annonce l'écoute sur le port fourni par Render (`10000` par défaut), et le déploiement est passé « Live » sans « Health check failed ».
 
@@ -97,7 +97,7 @@ Plan gratuit Render : si le service s'est endormi, la 1re requête peut mettre j
 
 | Règle | Inventaire | Ce qu'on vérifie | Scénario |
 |---|---|---|---|
-| CA3 | 🟠 | Seules les origines de `CORS_ORIGINS` (localhost:5173 et l'URL Vercel) sont acceptées, toute autre origine est refusée | Unitaire sur la lecture de `CORS_ORIGINS` + smoke ci-dessous (complément) |
+| CA3 | 🟠 | Seules les origines de `FRONTEND_ORIGINS` (localhost:5173 et l'URL Vercel) sont acceptées, toute autre origine est refusée | Unitaire sur la lecture de `FRONTEND_ORIGINS` + smoke ci-dessous (complément) |
 | CA4 | 🔴 | Depuis une origine autorisée, un utilisateur se connecte au back DEV et reste connecté d'une requête à l'autre | Smoke ci-dessous (version curl + version navigateur) |
 | (sans numéro) | Hors périmètre | Empêcher le backend Render de dormir (cron job) | Aucun smoke : porté hors repo |
 
@@ -106,7 +106,7 @@ Plan gratuit Render : si le service s'est endormi, la 1re requête peut mettre j
 > ✅ **Ce qu'on vérifie :**
 > - Sur l'URL Render, une requête qui porte l'origine Vercel ou `http://localhost:5173` reçoit `Access-Control-Allow-Origin` égal à cette origine et `Access-Control-Allow-Credentials: true`.
 > - Une requête d'une autre origine ne reçoit aucun `Access-Control-Allow-Origin` : le navigateur bloquera la lecture de la réponse.
-> - La lecture de `CORS_ORIGINS` (virgules, espaces, entrées vides, repli sur localhost) est couverte en unitaire. Le smoke couvre la tranche réelle : le middleware `cors` et la valeur de `CORS_ORIGINS` réellement présente sur Render après le renommage. Si elle manque, le repli ne garde que localhost et Vercel est refusé.
+> - La lecture de `FRONTEND_ORIGINS` (virgules, espaces, entrées vides, repli sur localhost) est couverte en unitaire. Le smoke couvre la tranche réelle : le middleware `cors` et la valeur de `FRONTEND_ORIGINS` réellement présente sur Render après le renommage. Si elle manque, le repli ne garde que localhost et Vercel est refusé.
 
 **Préconditions** : CA2 vérifié, mise en place commune faite.
 
@@ -134,13 +134,13 @@ Plan gratuit Render : si le service s'est endormi, la 1re requête peut mettre j
 **Résultat attendu**
 
 - Étape 1 : `access-control-allow-origin: https://kommit-frontend-diatigui-dev.vercel.app` et `access-control-allow-credentials: true`.
-  - Aucune ligne alors que l'étape 2 passe : `CORS_ORIGINS` absente sur Render (le code tombe sur le repli localhost), ou l'URL Vercel mal écrite dedans (slash final, `http` au lieu de `https`).
+  - Aucune ligne alors que l'étape 2 passe : `FRONTEND_ORIGINS` absente sur Render (le code tombe sur le repli localhost), ou l'URL Vercel mal écrite dedans (slash final, `http` au lieu de `https`).
 - Étape 2 : `access-control-allow-origin: http://localhost:5173` et `access-control-allow-credentials: true`.
 - Étape 3 : aucune ligne, puis `lignes trouvées : 1` (le `1` de `grep` veut dire « rien trouvé »). Le code HTTP reste `200` : `cors` n'empêche pas la réponse, il retire l'en-tête et c'est le navigateur qui bloque.
   - Une ligne `access-control-allow-origin: *` ou `https://evil.example` : la whitelist n'est pas appliquée.
 - Étape 4 : `HTTP/2 204`, `access-control-allow-origin` égal à l'URL Vercel, `access-control-allow-credentials: true`, `access-control-allow-methods` qui contient `POST`.
 
-- [x] CA3 (complément smoke) vérifié en local avec `CORS_ORIGINS` et sur Render avec l'ancien nom `FRONTEND_ORIGINS` : Vercel et localhost:5173 acceptés avec credentials, `evil.example` sans `Access-Control-Allow-Origin`, preflight `204`. À rejouer sur Render après le merge pour valider le renommage.
+- [x] CA3 (complément smoke) vérifié en local et sur Render avec `FRONTEND_ORIGINS` : Vercel et localhost:5173 acceptés avec credentials, `evil.example` sans `Access-Control-Allow-Origin`, preflight `204`.
 
 ---
 
@@ -181,7 +181,7 @@ Plan gratuit Render : si le service s'est endormi, la 1re requête peut mettre j
 - Étape 1 : `200`.
 - Étape 2 : `HTTP/2 200`, `access-control-allow-credentials: true`, et une ligne `set-cookie` dont le nom contient `session_token` (en https, Better Auth le préfixe en `__Secure-better-auth.session_token`) avec `Secure`, `HttpOnly` et `SameSite=None`.
   - `SameSite=Lax` : la branche https de `advanced.defaultCookieAttributes` dans `authClient.ts` n'est pas prise, donc `BETTER_AUTH_URL` est absente ou en http sur Render.
-  - `403` ou erreur d'origine : l'origine Vercel n'est pas dans `trustedOrigins`, donc pas dans `CORS_ORIGINS` sur Render.
+  - `403` ou erreur d'origine : l'origine Vercel n'est pas dans `trustedOrigins`, donc pas dans `FRONTEND_ORIGINS` sur Render.
   - `401` `{"code":"INVALID_CREDENTIALS",…}` : le compte de l'étape 1 n'a pas été créé.
 - Étape 3 : `HTTP/2 200`, corps de forme `GetTodayResponse` : `{"done":false,"standup":null}` pour un compte neuf.
 - Étape 4 : `401`, corps vide (`requireSession`).

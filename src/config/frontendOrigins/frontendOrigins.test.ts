@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { parseCorsOrigins } from '@/config/corsOrigins/corsOrigins.js'
+import { parseFrontendOrigins } from '@/config/frontendOrigins/frontendOrigins.js'
 
 const localhostOrigins = [
   'http://localhost:5173',
@@ -9,11 +9,11 @@ const localhostOrigins = [
 ]
 
 describe('KOM-27 · 2. Accès et authentification depuis un autre domaine', () => {
-  describe('CA3 · lecture de la whitelist CORS_ORIGINS', () => {
+  describe('CA3 · lecture de la whitelist FRONTEND_ORIGINS', () => {
     test('découpe la variable aux virgules', () => {
-      const rawCorsOrigins = 'http://localhost:5173,https://kommit-frontend-diatigui-dev.vercel.app'
+      const rawFrontendOrigins = 'http://localhost:5173,https://kommit-frontend-diatigui-dev.vercel.app'
 
-      expect(parseCorsOrigins(rawCorsOrigins)).toEqual([
+      expect(parseFrontendOrigins(rawFrontendOrigins)).toEqual([
         'http://localhost:5173',
         'https://kommit-frontend-diatigui-dev.vercel.app',
       ])
@@ -22,13 +22,13 @@ describe('KOM-27 · 2. Accès et authentification depuis un autre domaine', () =
     test('rend une seule origine quand la variable n’en contient qu’une', () => {
       const singleOrigin = 'https://kommit-frontend-diatigui-dev.vercel.app'
 
-      expect(parseCorsOrigins(singleOrigin)).toEqual(['https://kommit-frontend-diatigui-dev.vercel.app'])
+      expect(parseFrontendOrigins(singleOrigin)).toEqual(['https://kommit-frontend-diatigui-dev.vercel.app'])
     })
 
     test('retire les espaces autour de chaque origine', () => {
       const originsWithSpaces = '  http://localhost:5173 ,   https://kommit-frontend-diatigui-dev.vercel.app  '
 
-      expect(parseCorsOrigins(originsWithSpaces)).toEqual([
+      expect(parseFrontendOrigins(originsWithSpaces)).toEqual([
         'http://localhost:5173',
         'https://kommit-frontend-diatigui-dev.vercel.app',
       ])
@@ -39,14 +39,14 @@ describe('KOM-27 · 2. Accès et authentification depuis un autre domaine', () =
       ['une virgule au début', ',a,b', ['a', 'b']],
       ['2 virgules consécutives', 'a,,b', ['a', 'b']],
       ['une entrée faite d’espaces seuls', 'a,   ,b', ['a', 'b']],
-    ])('ignore les entrées vides : %s', (_case, rawCorsOrigins, expectedOrigins) => {
-      expect(parseCorsOrigins(rawCorsOrigins)).toEqual(expectedOrigins)
+    ])('ignore les entrées vides : %s', (_case, rawFrontendOrigins, expectedOrigins) => {
+      expect(parseFrontendOrigins(rawFrontendOrigins)).toEqual(expectedOrigins)
     })
 
     test('garde l’ordre des origines de la variable', () => {
       const originsInOrder = 'https://c.example,https://a.example,https://b.example'
 
-      expect(parseCorsOrigins(originsInOrder)).toEqual([
+      expect(parseFrontendOrigins(originsInOrder)).toEqual([
         'https://c.example',
         'https://a.example',
         'https://b.example',
@@ -54,15 +54,21 @@ describe('KOM-27 · 2. Accès et authentification depuis un autre domaine', () =
     })
 
     test('retombe sur les origines localhost de Vite quand la variable est absente', () => {
-      const missingCorsOrigins = undefined
+      const missingFrontendOrigins = undefined
 
-      expect(parseCorsOrigins(missingCorsOrigins)).toEqual(localhostOrigins)
+      expect(parseFrontendOrigins(missingFrontendOrigins)).toEqual(localhostOrigins)
     })
 
     test('retombe sur les origines localhost de Vite quand la variable est vide', () => {
-      const emptyCorsOrigins = ''
+      const emptyFrontendOrigins = ''
 
-      expect(parseCorsOrigins(emptyCorsOrigins)).toEqual(localhostOrigins)
+      expect(parseFrontendOrigins(emptyFrontendOrigins)).toEqual(localhostOrigins)
+    })
+
+    test('retombe sur les origines localhost de Vite quand la variable ne contient que des séparateurs', () => {
+      const separatorsOnly = ' , ,  '
+
+      expect(parseFrontendOrigins(separatorsOnly)).toEqual(localhostOrigins)
     })
   })
 })

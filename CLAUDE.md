@@ -34,9 +34,9 @@ kommit-backend/
 │   ├── app.ts             # assemblage de l'app Express
 │   ├── config/
 │   │   ├── appConfig.ts   # port, nom, version, URL de la base, config Better Auth, origins du front
-│   │   └── corsOrigins/   # lecture de CORS_ORIGINS, repli sur localhost
-│   │       ├── corsOrigins.ts
-│   │       └── corsOrigins.test.ts
+│   │   └── frontendOrigins/ # lecture de FRONTEND_ORIGINS, repli sur localhost
+│   │       ├── frontendOrigins.ts
+│   │       └── frontendOrigins.test.ts
 │   ├── middlewares/
 │   │   ├── authRateLimit.ts  # 5 essais ratés par minute sur sign-in et sign-up → 429
 │   │   ├── corsMiddleware.ts # whitelist des origins CORS, avec credentials

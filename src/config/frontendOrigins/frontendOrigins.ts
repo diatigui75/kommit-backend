@@ -6,11 +6,11 @@ const devFrontendOrigins = [
   'http://localhost:5176',
 ]
 
-export function parseCorsOrigins(rawCorsOrigins: string | undefined): string[] {
-  if (!rawCorsOrigins) return devFrontendOrigins
-
-  return rawCorsOrigins
+export function parseFrontendOrigins(rawFrontendOrigins: string | undefined): string[] {
+  const frontendOrigins = (rawFrontendOrigins ?? '')
     .split(',')
     .map((origin) => origin.trim())
     .filter(Boolean)
+
+  return frontendOrigins.length > 0 ? frontendOrigins : devFrontendOrigins
 }
