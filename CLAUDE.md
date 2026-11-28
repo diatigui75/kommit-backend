@@ -11,6 +11,8 @@ kommit-backend/
 ├── .claude/
 │   ├── agents/            # subagents Claude Code
 │   ├── hooks/
+│   │   ├── ci-fix.sh      # attend la CI d'une PR ; si rouge, lance un worker qui la corrige
+│   │   ├── ci-watch.sh    # hook PostToolUse : après gh pr create, lance ci-fix.sh en arrière-plan
 │   │   └── lint.sh        # hook Stop : lance pnpm lint
 │   ├── rules/             # conventions du repo
 │   ├── skills/            # skills Claude Code
