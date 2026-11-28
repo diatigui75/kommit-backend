@@ -116,9 +116,11 @@ kommit-backend/
 │   ├── inventaire-KOM-06.md # classement des règles de KOM-06
 │   ├── inventaire-KOM-18.md # classement des règles de KOM-18
 │   ├── inventaire-KOM-21.md # classement des règles de KOM-21
+│   ├── inventaire-KOM-25.md # classement des règles de KOM-25
 │   ├── smokes-KOM-06.md     # scénarios de test manuels de KOM-06
 │   ├── smokes-KOM-18.md     # scénarios de test manuels de KOM-18
-│   └── smokes-KOM-21.md     # scénarios de test manuels de KOM-21
+│   ├── smokes-KOM-21.md     # scénarios de test manuels de KOM-21
+│   └── smokes-KOM-25.md     # scénarios de test manuels de KOM-25
 ├── .env.example           # modèle des variables d'environnement
 ├── .gitignore
 ├── .nvmrc                 # version de Node (CI et Render)
